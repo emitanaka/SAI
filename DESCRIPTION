@@ -1,0 +1,25 @@
+Package: SAI
+Title: Standarise data with an AI assistant
+Version: 0.0.0.9000
+Authors@R: 
+    person("Emi", "Tanaka", , "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0002-1455-259X"))
+Description: The package provides a simple interface to use the large language models to clean data. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    base64enc,
+    cli,
+    clipr,
+    glue,
+    httr2,
+    jsonlite,
+    stringr
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
