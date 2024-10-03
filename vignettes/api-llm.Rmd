@@ -1,0 +1,25 @@
+---
+title: "Setting up the API from some vendors"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Setting up the API from some vendors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+`vignette("install-ollama")`
+
+
+Vendor | Environment variable name | 
+---|---|---|
+[OpenAI](https://platform.openai.com/api-keys) | `OPENAI_API_KEY` | 
+[Mistral AI](https://console.mistral.ai/api-keys/) | `MISTRAL_API_KEY` |
+[Anthropic](https://console.anthropic.com/settings/keys) | `ANTHROPIC_API_KEY` |

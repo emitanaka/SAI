@@ -8,6 +8,15 @@
 \description{
 The package provides a simple interface to use the large language models to clean data.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/emitanaka/SAI}
+  \item \url{http://emitanaka.org/SAI/}
+  \item Report bugs at \url{https://github.com/emitanaka/SAI/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Emi Tanaka \email{dr.emi.tanaka@gmail.com} (\href{https://orcid.org/0000-0002-1455-259X}{ORCID}) [copyright holder]
 

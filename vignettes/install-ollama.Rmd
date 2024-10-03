@@ -1,0 +1,21 @@
+---
+title: "Installing Ollama"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Installing Ollama}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`SAI` by default requires Ollama to be installed and running. 
+
+You can download Ollama [here](https://ollama.com/download). Select the one corresponding to your OS. For Windows, there is a Preview version.
+
+
