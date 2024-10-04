@@ -82,9 +82,9 @@ be installed and running. The benefit of using Ollama is that it uses a
 local LLM and requires no internet access. However, there is some set up
 and minimum computing requirements (depending on the LLM selected).
 There is no payment required to use Ollama.</p>
-<p>User who have difficulty setting up Ollama can alternatively register
-an account with an AI vendor listed <a href="#api">below</a>. There may
-payments involved for continued usage from these vendors.</p>
+<p>[WIP] User who have difficulty setting up Ollama can alternatively
+register an account with an AI vendor listed <a href="#api">below</a>.
+There may payments involved for continued usage from these vendors.</p>
 <div class="section level2">
 <h2 id="ollama">Ollama (local LLM)<a class="anchor" aria-label="anchor" href="#ollama"></a>
 </h2>
@@ -92,15 +92,20 @@ payments involved for continued usage from these vendors.</p>
 corresponding to your OS. For Windows, there is a Preview version.</p>
 <p>Open a terminal and start ollama.</p>
 <pre><code>ollama serve</code></pre>
-<p>Check the version of ollama:</p>
+<p>Check the version of ollama.</p>
 <pre><code><span><span class="va">ollama</span> <span class="op">-</span><span class="op">-</span><span class="va">version</span></span></code></pre>
-<p>Pull a LLM, say <code>llama3.1:8b</code> (see list of models availble
-<a href="https://ollama.com/library" class="external-link">here</a>):</p>
+<p>Pull a LLM, say <code>llama3.1:8b</code> (see list of models
+available <a href="https://ollama.com/library" class="external-link">here</a>). Currently
+llama3.1:8b is the default.</p>
 <pre><code>ollama pull llama3.1:8b</code></pre>
 </div>
 <div class="section level2">
 <h2 id="api">API Access (requires internet and account at vendor)<a class="anchor" aria-label="anchor" href="#api"></a>
 </h2>
+<p>[WIP]</p>
+<p>Be warned that these may not be free! Some of the vendors give free
+access for limited usage, but there may be some financial cost involved
+for continued usage or particular usages (e.g. commercial).</p>
 <p>The vendors listed in the table below uses cloud computing to run a
 LLM. You will need to register an account at the vendor, get the API key
 associated with your account and store this key in an environmental
@@ -141,8 +146,6 @@ should open this file. In this file you will need to enter your key like
 below.</p>
 <pre><code>OPENAI_API_KEY=[YOUR API KEY]</code></pre>
 <p>You need to restart your R session after entering your API key.</p>
-<p>Some of the vendors give free access, however there may be some cost
-involved for particular usages (e.g. commercial).</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
