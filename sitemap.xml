@@ -4,13 +4,10 @@
     <loc>https://emitanaka.org/SAI/404.html</loc>
   </url>
   <url>
-    <loc>https://emitanaka.org/SAI/articles/api-llm.html</loc>
-  </url>
-  <url>
     <loc>https://emitanaka.org/SAI/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://emitanaka.org/SAI/articles/install-ollama.html</loc>
+    <loc>https://emitanaka.org/SAI/articles/setup-LLM.html</loc>
   </url>
   <url>
     <loc>https://emitanaka.org/SAI/authors.html</loc>

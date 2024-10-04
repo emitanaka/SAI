@@ -2,9 +2,8 @@ pandoc: '3.2'
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  api-llm: api-llm.html
-  install-ollama: install-ollama.html
-last_built: 2024-10-03T23:51Z
+  setup-LLM: setup-LLM.html
+last_built: 2024-10-04T03:24Z
 urls:
   reference: https://emitanaka.org/SAI/reference
   article: https://emitanaka.org/SAI/articles
