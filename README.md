@@ -17,7 +17,9 @@ tasks.
 WARNING: validate that the method works for your own data context.
 
 The default setting has been set so that the results are reproducible
-and less prone to “creativity”, as desired for data processing.
+and less prone to “creativity”, as desired for data processing. The
+reproducibility is achieved within the same system (i.e. computer) only
+and not necessarily across different systems.
 
 ## Installation
 
@@ -162,21 +164,21 @@ sai_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Ocea
 The above process required specification of all the levels but sometimes
 you may know not ahead all of the levels. The `sai_lvl_sweep()` function
 will attempt to clean up the levels. Below it gets most right but
-classifies “Australia” to be “US”.
+classifies “Australia” wrongly.
 
 ``` r
 sai_lvl_sweep(messy$country)
 #>             UK             US         Canada United Kingdom            USA 
 #>           "UK"           "US"       "Canada"           "UK"           "US" 
 #>    New Zealand             NZ      Australia 
-#>           "NZ"           "NZ"           "US"
+#>  "New Zealand"  "New Zealand"  "New Zealand"
 #> 
 #> ── Converted by SAI: ───────────────────────────────────────────────────────────
-#>         original converted
-#> 1    New Zealand        NZ
-#> 2 United Kingdom        UK
-#> 3            USA        US
-#> 4      Australia        US
+#>         original   converted
+#> 1             NZ New Zealand
+#> 2      Australia New Zealand
+#> 3 United Kingdom          UK
+#> 4            USA          US
 ```
 
 If you know the subset of labels that are correct, you can specify this
@@ -246,3 +248,15 @@ sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_
 #> 
 #> The graph is overlaid with dots of various sizes, which likely represent error bars or confidence intervals for each data point. These dots indicate the range within which the actual values might fall, given the uncertainty associated with the measurements. The image does not contain any text that provides additional context or interpretation of the data.
 ```
+
+## Related packages
+
+- `air`
+- `askgpt`
+- `chatgpt`
+- `elmer`
+- `gptchatteR`
+- `gptstudio`
+- `gpttools`
+- `TheOpenAIR`
+- `tidychatmodels`

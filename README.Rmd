@@ -23,7 +23,7 @@ Save time and effort by using SAI to clean and standardise your data. The SAI pa
 
 WARNING: validate that the method works for your own data context. 
 
-The default setting has been set so that the results are reproducible and less prone to "creativity", as desired for data processing.
+The default setting has been set so that the results are reproducible and less prone to "creativity", as desired for data processing. The reproducibility is achieved within the same system (i.e. computer) only and not necessarily across different systems.
 
 ## Installation
 
@@ -110,7 +110,7 @@ The function actucally works to match a continent as well! Let's use `sai_lvl_ma
 sai_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Oceania", "South America"))
 ```
 
-The above process required specification of all the levels but sometimes you may know not ahead all of the levels. The `sai_lvl_sweep()` function will attempt to clean up the levels. Below it gets most right but classifies "Australia" to be "US".
+The above process required specification of all the levels but sometimes you may know not ahead all of the levels. The `sai_lvl_sweep()` function will attempt to clean up the levels. Below it gets most right but classifies "Australia" wrongly.
 
 ```{r}
 sai_lvl_sweep(messy$country)
@@ -151,4 +151,14 @@ sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_
 ```
 
 
+## Related packages 
 
+- `air`
+- `askgpt`
+- `chatgpt`
+- `elmer`
+- `gptchatteR`
+- `gptstudio`
+- `gpttools`
+- `TheOpenAIR`
+- `tidychatmodels`
