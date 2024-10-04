@@ -1,4 +1,38 @@
 url: https://emitanaka.org/SAI/
 template:
   bootstrap: 5
+  bootswatch: sandstone
 
+reference:
+- title: General purpose
+  contents:
+  - sai_assist
+  - sai_yes_no
+  - contains("prompt")
+- title: Categorical variables
+  desc:  Help to standardise categorical variables.
+  contents:
+  - contains("fct")
+  - contains("lvl")
+- title: Language translation
+  contents:
+  - sai_translate
+  - sai_is_language
+  - sai_what_language
+- title: Options or settings
+  contents:
+  - contains("set_")
+  - contains("get_")
+  - ollama_model_list
+- title: Datasets
+  contents:
+  - airbnb_listings
+  - airbnb_reviews
+  - alcohol
+  - consumer
+  - hotel
+  - likerts
+  - messy
+  - recipes
+  - restaurant
+  - salary

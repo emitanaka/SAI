@@ -1,0 +1,65 @@
+---
+title: "Setting up a LLM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Setting up a LLM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`SAI` by default requires [Ollama](#ollama) to be installed and running. The benefit of using Ollama is that it uses a local LLM and requires no internet access. However, there is some set up and minimum computing requirements (depending on the LLM selected). There is no payment required to use Ollama.
+
+User who have difficulty setting up Ollama can alternatively register an account with an AI vendor listed [below](#api). There may payments involved for continued usage from these vendors. 
+
+
+## Ollama (local LLM) {#ollama}
+
+
+You can download Ollama [here](https://ollama.com/download). Select the one corresponding to your OS. For Windows, there is a Preview version.
+
+Open a terminal and start ollama. 
+
+```
+ollama serve
+```
+
+Check the version of ollama:
+
+```
+ollama --version
+```
+
+Pull a LLM, say `llama3.1:8b` (see list of models availble [here](https://ollama.com/library)):
+
+```
+ollama pull llama3.1:8b
+```
+
+
+## API Access (requires internet and account at vendor) {#api}
+
+The vendors listed in the table below uses cloud computing to run a LLM. You will need to register an account at the vendor, get the API key associated with your account and store this key in an environmental variable specified in the second column in the table below.
+
+Vendor | Environment variable name | 
+---|---|---|
+[OpenAI](https://platform.openai.com/api-keys) | `OPENAI_API_KEY` | 
+[Mistral AI](https://console.mistral.ai/api-keys/) | `MISTRAL_API_KEY` |
+[Anthropic](https://console.anthropic.com/settings/keys) | `ANTHROPIC_API_KEY` |
+
+The environmental variable will need to be stored in `.Renviron` file located by your R session. The easiest way to find this file is to use `usethis::edit_r_environ()` which should open this file. In this file you will need to enter your key like below.
+
+```
+OPENAI_API_KEY=[YOUR API KEY]
+```
+
+You need to restart your R session after entering your API key.
+
+
+Some of the vendors give free access, however there may be some cost involved for particular usages (e.g. commercial).

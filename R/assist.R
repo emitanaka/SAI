@@ -1,6 +1,7 @@
 #' SAI the general assistant
 #'
 #' @param prompt A list of prompts or text with a prompt.
+#' @param vendor The vendor name. By default is ollama.
 #' @param model The ollama model name, e.g. `llama3.2:1b` (default), `gemma:7b`, `llama3.1:8b`
 #' @param port The port number.
 #' @param format The format to use. Default is NA and currently only other option is "json".
@@ -8,6 +9,7 @@
 #' @param stop A list of stop sequences to use.
 #' @export
 sai_assist <- function(prompt = NULL,
+                       vendor = sai_get_option("vendor"),
                        model = sai_get_option("model"),
                        port = sai_get_option("port"),
                        format = c("none", "json"),
@@ -22,9 +24,11 @@ sai_assist <- function(prompt = NULL,
                        .content_envir = rlang::caller_env(),
                        ...) {
 
-  available_model_list <- ollama_model_list()
-  # https://github.com/ollama/ollama#model-library
-  if(!model %in% available_model_list) cli::cli_abort("The model {.var {model}} is not available.")
+  if(vendor == "ollama") {
+    available_model_list <- ollama_model_list()
+    # https://github.com/ollama/ollama#model-library
+    if(!model %in% available_model_list) cli::cli_abort("The model {.var {model}} is not available from the vendor {.var {vendor}}.")
+  }
 
   format <- match.arg(format)
 
@@ -79,6 +83,9 @@ print.sai <- function(x, ...) {
   x
 }
 
+#' Answer with yes or no
+#'
+#' @param prompt A prompt.
 #' @export
 sai_yes_no <- function(prompt) {
   if(is.character(prompt)) prompt <- list(prompt_user(prompt))
