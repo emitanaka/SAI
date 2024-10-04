@@ -31,7 +31,7 @@ downloading a local LLM via Ollama. To do this see
 
 ### Package
 
-You can install the development version of SAI like so:
+You can install the development version of SAI like below:
 
 ``` r
 # install.packages("pak")
@@ -104,7 +104,7 @@ sai_get_option("model")
 ```
 
 You can change the model to another one (provided that it is available
-in your system) like so:
+in your system) like below:
 
 ``` r
 sai_set_option("model", "llama3.1:1b")
@@ -139,7 +139,7 @@ sai_fct_match(messy$country, levels = c("UK", "USA", "Canada", "Australia", "NZ"
 #> Levels: UK USA Canada Australia NZ
 ```
 
-The function actucally works to match a continent as well! Let’s use
+The function actually works to match a continent as well! Let’s use
 `sai_lvl_match()` to more easily see the conversion on the levels alone.
 
 ``` r
@@ -162,7 +162,7 @@ sai_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Ocea
 ```
 
 The above process required specification of all the levels but sometimes
-you may know not ahead all of the levels. The `sai_lvl_sweep()` function
+you may not know ahead all of the levels. The `sai_lvl_sweep()` function
 will attempt to clean up the levels. Below it gets most right but
 classifies “Australia” wrongly.
 

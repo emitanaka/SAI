@@ -34,7 +34,7 @@ You will also need to set up a large language model (LLM), either by downloading
 
 ### Package
 
-You can install the development version of SAI like so:
+You can install the development version of SAI like below:
 
 ``` r
 # install.packages("pak")
@@ -79,7 +79,7 @@ The default large language model is shown below.
 sai_get_option("model")
 ```
 
-You can change the model to another one (provided that it is available in your system) like so:
+You can change the model to another one (provided that it is available in your system) like below:
 
 ```{r}
 #| eval: false
@@ -103,14 +103,14 @@ While you can manually fix this, again, this can be tedious. We can map this aut
 sai_fct_match(messy$country, levels = c("UK", "USA", "Canada", "Australia", "NZ"))
 ```
 
-The function actucally works to match a continent as well! Let's use `sai_lvl_match()` to more easily see the conversion on the levels alone.
+The function actually works to match a continent as well! Let's use `sai_lvl_match()` to more easily see the conversion on the levels alone.
 
 
 ```{r}
 sai_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Oceania", "South America"))
 ```
 
-The above process required specification of all the levels but sometimes you may know not ahead all of the levels. The `sai_lvl_sweep()` function will attempt to clean up the levels. Below it gets most right but classifies "Australia" wrongly.
+The above process required specification of all the levels but sometimes you may not know ahead all of the levels. The `sai_lvl_sweep()` function will attempt to clean up the levels. Below it gets most right but classifies "Australia" wrongly.
 
 ```{r}
 sai_lvl_sweep(messy$country)
