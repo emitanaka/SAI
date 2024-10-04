@@ -58,6 +58,9 @@ have been the same by making a few assumptions. The assumptions include that
 the levels with high frequency are correct and low frequency levels may contain
 typos or alternative representation of other existing levels.
 }
+\details{
+Be warned that this function is experimental and may not work as intended.
+}
 \seealso{
 \code{\link[=sai_lvl_match]{sai_lvl_match()}}
 }

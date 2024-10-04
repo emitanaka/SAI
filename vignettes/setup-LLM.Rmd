@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
 
 `SAI` by default requires [Ollama](#ollama) to be installed and running. The benefit of using Ollama is that it uses a local LLM and requires no internet access. However, there is some set up and minimum computing requirements (depending on the LLM selected). There is no payment required to use Ollama.
 
-User who have difficulty setting up Ollama can alternatively register an account with an AI vendor listed [below](#api). There may payments involved for continued usage from these vendors. 
+
+[WIP] User who have difficulty setting up Ollama can alternatively register an account with an AI vendor listed [below](#api). There may payments involved for continued usage from these vendors. 
 
 
 ## Ollama (local LLM) {#ollama}
@@ -30,13 +31,13 @@ Open a terminal and start ollama.
 ollama serve
 ```
 
-Check the version of ollama:
+Check the version of ollama.
 
 ```
 ollama --version
 ```
 
-Pull a LLM, say `llama3.1:8b` (see list of models availble [here](https://ollama.com/library)):
+Pull a LLM, say `llama3.1:8b` (see list of models available [here](https://ollama.com/library)). Currently `r SAI::sai_get_option("model")` is the default.
 
 ```
 ollama pull llama3.1:8b
@@ -44,6 +45,10 @@ ollama pull llama3.1:8b
 
 
 ## API Access (requires internet and account at vendor) {#api}
+
+[WIP]
+
+Be warned that these may not be free! Some of the vendors give free access for limited usage, but there may be some financial cost involved for continued usage or particular usages (e.g. commercial). 
 
 The vendors listed in the table below uses cloud computing to run a LLM. You will need to register an account at the vendor, get the API key associated with your account and store this key in an environmental variable specified in the second column in the table below.
 
@@ -62,4 +67,3 @@ OPENAI_API_KEY=[YOUR API KEY]
 You need to restart your R session after entering your API key.
 
 
-Some of the vendors give free access, however there may be some cost involved for particular usages (e.g. commercial).

@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' # example code
-#' sai_translate(c("猿も木から落ちる", "在公寓区，周边有很多吃的还有大型超市，很方便"))
+#' sai_translate(c("猿も木から落ちる", "你好", "bon appetit"))
 #'
 #' @export
 sai_translate <- function(text, from = NULL, to = sai_get_option("language")) {
@@ -19,8 +19,8 @@ sai_translate <- function(text, from = NULL, to = sai_get_option("language")) {
 
   map_chr(text, function(x) {
     sai_assist(list(prompt_user(x),
-                    if(is.null(from)) prompt_user("Translate the above text to {to}.")
-                    else prompt_user("Translate the above text from {from} to {to}.")),
+                    if(is.null(from)) prompt_user("Translate the above text to {to}. Just return the translated text.")
+                    else prompt_user("Translate the above text from {from} to {to}. Just return the translated text.")),
                format = "none")
   })
 }
@@ -31,7 +31,7 @@ sai_translate <- function(text, from = NULL, to = sai_get_option("language")) {
 #' @param text The text.
 #' @param language The language to check. The default is "English".
 #' @examples
-#' sai_is_language(c("猿も木から落ちる", "在公寓区，周边有很多吃的还有大型超市，很方便"),
+#' sai_is_language(c("猿も木から落ちる", "你好", "bon appetit"),
 #'                 language = "Japanese")
 #' @family translate
 
@@ -51,7 +51,7 @@ sai_is_language <- function(text, language = sai_get_option("language")) {
 #' @param text The text.
 #' @family translate
 #' @examples
-#' sai_what_language(c("猿も木から落ちる", "在公寓区，周边有很多吃的还有大型超市，很方便"))
+#' sai_what_language(c("猿も木から落ちる", "你好", "bon appetit"))
 #' @export
 sai_what_language <- function(text) {
   abort_if_not_text(text)

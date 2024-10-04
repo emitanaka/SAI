@@ -13,7 +13,7 @@ sai_what_language(text)
 Determine the language of the input text
 }
 \examples{
-sai_what_language(c("猿も木から落ちる", "在公寓区，周边有很多吃的还有大型超市，很方便"))
+sai_what_language(c("猿も木から落ちる", "你好", "bon appetit"))
 }
 \seealso{
 Other translate: 

@@ -9,7 +9,8 @@ test_that("multiplication works", {
   png(tf1 <- tempfile(fileext = ".png"))
   plot(lm(y ~ x), 1)
   dev.off()
+  img <- "https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png"
 
-  prompt_user("Does this residual plot contain a pattern?", images = tf1) |>
+  prompt_user("What does the image contain?", images = tf) |>
     sai_assist(model = "llava:7b")
 })

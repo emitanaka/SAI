@@ -6,6 +6,7 @@
 \usage{
 sai_assist(
   prompt = NULL,
+  vendor = sai_get_option("vendor"),
   model = sai_get_option("model"),
   port = sai_get_option("port"),
   format = c("none", "json"),
@@ -23,6 +24,8 @@ sai_assist(
 }
 \arguments{
 \item{prompt}{A list of prompts or text with a prompt.}
+
+\item{vendor}{The vendor name. By default is ollama.}
 
 \item{model}{The ollama model name, e.g. \verb{llama3.2:1b} (default), \verb{gemma:7b}, \verb{llama3.1:8b}}
 

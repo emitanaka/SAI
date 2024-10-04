@@ -9,7 +9,9 @@
 \alias{sai_set_language}
 \title{Get or set an option for the \code{sai} package}
 \usage{
-sai_get_option(x = c("model", "port", "language", "num_predict", "all"))
+sai_get_option(
+  x = c("model", "vendor", "port", "language", "num_predict", "all")
+)
 
 sai_set_option(x = c("model", "port", "num_predict", "language"), val)
 

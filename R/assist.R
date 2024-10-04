@@ -28,6 +28,8 @@ sai_assist <- function(prompt = NULL,
     available_model_list <- ollama_model_list()
     # https://github.com/ollama/ollama#model-library
     if(!model %in% available_model_list) cli::cli_abort("The model {.var {model}} is not available from the vendor {.var {vendor}}.")
+  } else {
+    cli::cli_abort("Currently the only vendor supported is Ollama.")
   }
 
   format <- match.arg(format)

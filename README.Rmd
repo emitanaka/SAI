@@ -19,21 +19,26 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Save time and effort by using SAI to clean and standardise your data. The SAI package is your AI assistant that contain a collection of functions to help you with your data cleaning tasks.
+Save time and effort by using SAI to clean and standardise your data. The SAI package is your artificial intelligence (AI) assistant that contain a collection of functions to help you with your data cleaning tasks.
+
+WARNING: validate that the method works for your own data context. 
+
+The default setting has been set so that the results are reproducible and less prone to "creativity", as desired for data processing.
 
 ## Installation
+
+### Large Language Model
+
+You will also need to set up a large language model (LLM), either by downloading a local LLM via Ollama. To do this see [`vignette("setup-LLM", package = "SAI")`](https://emitanaka.org/SAI/articles/setup-LLM.html).
+
+
+### Package
 
 You can install the development version of SAI like so:
 
 ``` r
 # install.packages("pak")
 pak::pak("emitanaka/SAI")
-```
-
-You will also need to install Ollama and one of the models, such as `r SAI::sai_get_option("model")` (the default for the SAI package). You can do this by running the following command in your terminal:
-
-```bash
-ollama pull llama3.1:8b
 ```
 
 
@@ -66,7 +71,7 @@ The `sai_fct_reorder()` function will try to reorder the levels of the factor in
 sai_fct_reorder(likerts$likert1) |> levels()
 ```
 
-### Large language model
+### Specifying the LLM
 
 The default large language model is shown below.
 
@@ -105,12 +110,45 @@ The function actucally works to match a continent as well! Let's use `sai_lvl_ma
 sai_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Oceania", "South America"))
 ```
 
+The above process required specification of all the levels but sometimes you may know not ahead all of the levels. The `sai_lvl_sweep()` function will attempt to clean up the levels. Below it gets most right but classifies "Australia" to be "US".
+
+```{r}
+sai_lvl_sweep(messy$country)
+```
+
+If you know the subset of labels that are correct, you can specify this in the argument `known` like below.
+
+```{r}
+sai_lvl_sweep(messy$country, known = "Australia")
+```
 
 ### Translate
 
-The `sai_translate()` function can be used to translate text to another language (default English). 
+The `sai_translate()` function can be used to translate text to another language (default English). The text can be a mix of different languages.
 
 ```{r}
-sai_translate(c("猿も木から落ちる", "你好"))
+text <- c("猿も木から落ちる", "你好", "bon appetit")
+sai_translate(text)
 ```
+
+You can also try to identify the language in the text. 
+
+```{r}
+sai_what_language(text)
+```
+
+## Images
+
+We may have some plots (or any images) and process these using a multimodal model like `llava`.
+
+![](https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png){width="40%"}
+
+We can describe the plot with `sai_describe_image()` function. This can be handy to create alt text entries quickly.
+
+```{r}
+sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png",
+                   model = "llava:13b")
+```
+
+
 

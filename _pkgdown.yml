@@ -19,6 +19,9 @@ reference:
   - sai_translate
   - sai_is_language
   - sai_what_language
+- title: Describing images
+  contents:
+  - sai_describe_image
 - title: Options or settings
   contents:
   - contains("set_")

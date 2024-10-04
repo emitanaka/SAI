@@ -101,6 +101,8 @@ reorder_3 <- function(lvls, ...) {
 #' the levels with high frequency are correct and low frequency levels may contain
 #' typos or alternative representation of other existing levels.
 #'
+#' Be warned that this function is experimental and may not work as intended.
+#'
 #' @param .f A factor
 #' @param known A character vector of the levels that are known to be correct. If none
 #'   are provided, it is assumed that no correct values are known. If an element has a name
@@ -133,6 +135,7 @@ sai_fct_sweep <- function(.f,
   abort_if_not_single_numeric(nlevels_max)
   abort_if_not_single_numeric(nlevels_min)
 
+
   if(is.null(known)) {
     lvls_known <- character(0)
     f <- .f
@@ -149,7 +152,10 @@ sai_fct_sweep <- function(.f,
   wrong <- unique(c(wrong, setdiff(names(tt)[tt < n_min], known)))
 
   if(nlevels_top > 0) {
-    known <- unique(c(known, setdiff(names(tt[rank(-tt) <= nlevels_top]), wrong)))
+    top <- setdiff(setdiff(names(tt[rank(-tt) <= nlevels_top]), wrong), known)
+    ntop <- max(nlevels_max - length(unique(known)), length(top), 0)
+    if(length(top)) top <- top[seq(ntop)]
+    known <- unique(c(known, top))
   }
 
   if(nlevels_bottom > 0) {
@@ -158,13 +164,13 @@ sai_fct_sweep <- function(.f,
 
   unknown <- setdiff(unique(f), c(wrong, known))
   if(length(wrong)) {
-    dict <- sai_lvl_match(wrong, levels = c(unknown, known), "Only match if very confident.")
+    dict <- sai_lvl_match(wrong, levels = c(unknown, known), "Only match if supremely confident using trusted sources.")
     dict <- na.omit(dict)
   } else {
     dict <- NULL
     unknown_set <- unknown
     for(x in unknown) {
-      d <- sai_lvl_match(x, levels = c(known, setdiff(unknown_set, x)), "Only match if supremely confident.")
+      d <- sai_lvl_match(x, levels = c(known, setdiff(unknown_set, x)), "Only match if supremely confident  using trusted sources.")
       if(!is.na(d)) {
         unknown_set <- setdiff(unknown_set, names(d))
         dict <- c(dict, d)
@@ -243,15 +249,15 @@ sai_lvl_sweep <- function(.f,
                           n_min = 1L,
                           ...) {
   dict <- sai_fct_sweep(.f,
-                        known = NULL,
-                        wrong = NULL,
-                        nlevels_max = length(unique(.f)) - length(wrong),
-                        nlevels_min = length(unique(known)) + 1,
-                        nlevels_top = round(nlevels_max * 0.25),
-                        nlevels_bottom = 0,
-                        n_min = 1L,
+                        known = known,
+                        wrong = wrong,
+                        nlevels_max = nlevels_max,
+                        nlevels_min = nlevels_min,
+                        nlevels_top = nlevels_top,
+                        nlevels_bottom = nlevels_bottom,
+                        n_min = n_min,
                         ...)
 
-  res <- setNames(as.character(dict), names(dict))
+  res <- setNames(as.character(dict), .f)
   structure(res[!duplicated(paste0(res, names(res)))], class = c("sai_lvl_match", class(res)))
 }

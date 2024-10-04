@@ -19,7 +19,7 @@ Translate text from one language to another
 }
 \examples{
 # example code
-sai_translate(c("猿も木から落ちる", "在公寓区，周边有很多吃的还有大型超市，很方便"))
+sai_translate(c("猿も木から落ちる", "你好", "bon appetit"))
 
 }
 \seealso{

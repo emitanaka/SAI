@@ -15,7 +15,7 @@ sai_is_language(text, language = sai_get_option("language"))
 Determine if the input is a particular language
 }
 \examples{
-sai_is_language(c("猿も木から落ちる", "在公寓区，周边有很多吃的还有大型超市，很方便"),
+sai_is_language(c("猿も木から落ちる", "你好", "bon appetit"),
                 language = "Japanese")
 }
 \seealso{
