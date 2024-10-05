@@ -135,19 +135,54 @@
 <div class="section level3">
 <h3 id="specifying-the-llm">Specifying the LLM<a class="anchor" aria-label="anchor" href="#specifying-the-llm"></a>
 </h3>
-<p>The default large language model is shown below.</p>
+<p>The default large language model and its parameters are shown below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_option.html">sai_get_option</a></span><span class="op">(</span><span class="st">"model"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "llama3.1:8b"</span></span></code></pre></div>
+<span><span class="co">#&gt; $model</span></span>
+<span><span class="co">#&gt; [1] "llama3.1:8b"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $vendor</span></span>
+<span><span class="co">#&gt; [1] "ollama"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args</span></span>
+<span><span class="co">#&gt; $args$port</span></span>
+<span><span class="co">#&gt; [1] 11434</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$format</span></span>
+<span><span class="co">#&gt; [1] "none"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$tools</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$temperature</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$stop</span></span>
+<span><span class="co">#&gt; [1] NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$seed</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$top_k</span></span>
+<span><span class="co">#&gt; [1] 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$top_p</span></span>
+<span><span class="co">#&gt; [1] 0.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$num_predict</span></span>
+<span><span class="co">#&gt; [1] 1000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $args$keep_alive</span></span>
+<span><span class="co">#&gt; [1] "5m"</span></span></code></pre></div>
 <p>You can change the model to another one (provided that it is available in your system) like below:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/sai_option.html">sai_set_option</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="st">"llama3.1:1b"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sai_option.html">sai_set_option</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="fu"><a href="reference/model_ollama.html">model_ollama</a></span><span class="op">(</span><span class="st">"llama3.2:1b"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Tiny models (1b) are faster but less accurate. It is not recommended to use them for important tasks.</p>
 </div>
 <div class="section level3">
 <h3 id="categorise-text">Categorise text<a class="anchor" aria-label="anchor" href="#categorise-text"></a>
 </h3>
-<p>Some categorical variables can have simple typos or alternative representations. For example below we have UK written also as “United Kingdom”.</p>
+<p>Some categorical variables can have simple typos or alternative representations. For example below we have “UK” written also as “United Kingdom”.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">messy</span><span class="op">$</span><span class="va">country</span></span>
 <span><span class="co">#&gt;  [1] "UK"             "US"             "Canada"         "UK"            </span></span>
@@ -226,12 +261,12 @@
 <div class="section level2">
 <h2 id="images">Images<a class="anchor" aria-label="anchor" href="#images"></a>
 </h2>
-<p>We may have some plots (or any images) and process these using a multimodal model like <code>llava</code>.</p>
+<p>We may have some plots (or image) and process these using a multimodal model like <code>llava</code>. This image is available as a link <a href="https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png" class="external-link">here</a>.</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png" style="width:40.0%"></p>
-<p>We can describe the plot with <code><a href="reference/sai_describe_image.html">sai_describe_image()</a></code> function. This can be handy to create alt text entries quickly.</p>
+<p>We can describe the plot with <code><a href="reference/sai_describe_image.html">sai_describe_image()</a></code> function. The image either has to be a url or path where the image is stored. This can be handy to create alt text entries quickly, but note that the description can have errors (as below).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_describe_image.html">sai_describe_image</a></span><span class="op">(</span><span class="st">"https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png"</span>,</span>
-<span>                   model <span class="op">=</span> <span class="st">"llava:13b"</span><span class="op">)</span></span>
+<span>                   model <span class="op">=</span> <span class="fu"><a href="reference/model_ollama.html">model_ollama</a></span><span class="op">(</span><span class="st">"llava:13b"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  The image is a graphical representation of data comparing plant growth versus treatment across three different groups. There are three lines on the graph, each representing a different group: Control (blue), Treatment 1 (red), and Treatment 2 (green). Each line shows fluctuations over time, with peaks and troughs indicating periods of growth or decline in plant size.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; The x-axis represents time, with increments that are not specified but appear to be intervals for measuring the growth of plants. The y-axis is labeled "Plant Growth," which suggests that the data points represent the size or health of the plants at each point in time.</span></span>
