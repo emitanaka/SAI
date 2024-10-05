@@ -26,7 +26,7 @@ and not necessarily across different systems.
 ### Large Language Model
 
 You will also need to set up a large language model (LLM), either by
-downloading a local LLM via Ollama. To do this see
+downloading a local LLM via Ollama or API access. To do this see
 [`vignette("setup-LLM", package = "SAI")`](https://emitanaka.org/SAI/articles/setup-LLM.html).
 
 ### Package
@@ -164,7 +164,7 @@ sai_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Ocea
 The above process required specification of all the levels but sometimes
 you may not know ahead all of the levels. The `sai_lvl_sweep()` function
 will attempt to clean up the levels. Below it gets most right but
-classifies “Australia” wrongly.
+classifies “Australia” wrong.
 
 ``` r
 sai_lvl_sweep(messy$country)

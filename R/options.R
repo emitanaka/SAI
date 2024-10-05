@@ -1,5 +1,4 @@
-op.sai <- list(sai.model = "llama3.1:8b",
-               sai.vendor = "ollama",
+op.sai <- list(sai.model = list(vendor = "ollama", model = "llama3.1:8b"),
                sai.port = 11434,
                sai.language = "English",
                sai.num_predict = 1000)
@@ -13,7 +12,7 @@ NULL
 #' @param val The value of the option to set.
 #' @rdname sai_option
 #' @export
-sai_get_option <- function(x = c("model", "vendor", "port", "language", "num_predict", "all")) {
+sai_get_option <- function(x = c("model", "port", "language", "num_predict", "all")) {
   x <- match.arg(x)
   if(x == "all") {
     op.sai

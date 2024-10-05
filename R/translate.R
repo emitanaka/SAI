@@ -20,8 +20,7 @@ sai_translate <- function(text, from = NULL, to = sai_get_option("language")) {
   map_chr(text, function(x) {
     sai_assist(list(prompt_user(x),
                     if(is.null(from)) prompt_user("Translate the above text to {to}. Just return the translated text.")
-                    else prompt_user("Translate the above text from {from} to {to}. Just return the translated text.")),
-               format = "none")
+                    else prompt_user("Translate the above text from {from} to {to}. Just return the translated text.")))
   })
 }
 
@@ -58,6 +57,6 @@ sai_what_language <- function(text) {
   map_chr(text, function(x) {
     sai_assist(list(prompt_user(x),
                     prompt_user("What language is the above text in?")),
-               format = "json")[[1]]
+               args = args_model(sai_get_option("model")$vendor, format = "json"))[[1]]
   })
 }

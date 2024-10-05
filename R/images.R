@@ -17,11 +17,9 @@ is_base64 <- function(x) {
 #'
 #' @export
 sai_describe_image <- function(x,
-                               vendor = sai_get_option("vendor"),
                                model = sai_get_option("model")) {
 
-  if(vendor=="ollama" && !grepl("llava", model)) cli::cli_abort("For ollama models, only multimodal models like {.var llava} can process images. Use the argument say {.code model = \"llava:8b\"}.")
+  if(model$vendor=="ollama" && !grepl("llava", model$model)) cli::cli_abort("For ollama models, only multimodal models like {.var llava} can process images. Use the argument say {.code model = \"llava:8b\"}.")
   sai_assist(prompt_user("Describe the image.", images = x),
-             vendor = vendor,
              model = model)
 }

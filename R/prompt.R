@@ -19,6 +19,7 @@ prompt_user <- function(content, images = NULL, tool_calls = NULL, .content_envi
 }
 
 
+
 prompt <- function(content,
                    role = c("user", "assistant", "system"),
                    images = NULL,
@@ -27,6 +28,7 @@ prompt <- function(content,
                    .collapse_regex = "[*]$") {
 
   abort_if_not_single_text(content)
+
 
   if(!is.null(images)) {
     if(!is.list(images) | length(images) > 1) {

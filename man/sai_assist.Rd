@@ -6,18 +6,8 @@
 \usage{
 sai_assist(
   prompt = NULL,
-  vendor = sai_get_option("vendor"),
   model = sai_get_option("model"),
-  port = sai_get_option("port"),
-  format = c("none", "json"),
-  tools = NULL,
-  temperature = 0,
-  stop = NA,
-  seed = NA,
-  top_k = 1,
-  top_p = 0.1,
-  num_predict = sai_get_option("num_predict"),
-  keep_alive = "5m",
+  args = args_model(vendor),
   .content_envir = rlang::caller_env(),
   ...
 )
@@ -25,17 +15,9 @@ sai_assist(
 \arguments{
 \item{prompt}{A list of prompts or text with a prompt.}
 
-\item{vendor}{The vendor name. By default is ollama.}
+\item{model}{A list of model and vendor name. Use model helpers like \code{model_ollama()} and \code{model_openai()}.}
 
-\item{model}{The ollama model name, e.g. \verb{llama3.2:1b} (default), \verb{gemma:7b}, \verb{llama3.1:8b}}
-
-\item{port}{The port number.}
-
-\item{format}{The format to use. Default is NA and currently only other option is "json".}
-
-\item{temperature}{The temperature of the model where higher temperature means higher creativity.}
-
-\item{stop}{A list of stop sequences to use.}
+\item{args}{The arguments for the \code{model}.}
 }
 \description{
 SAI the general assistant

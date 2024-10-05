@@ -36,6 +36,11 @@ collapse_transformer <- function(regex) {
   }
 }
 
+abort_if_model_not_available <- function(model, vendor, mlist, call = rlang::caller_env()) {
+  if(!model %in% mlist) cli::cli_abort("The model {.var {model}} is not available from the vendor {.var {vendor}}.",
+                                       call = call)
+}
+
 
 
 # Compatibility functions for `purrr`
@@ -52,4 +57,9 @@ map_chr <- function (.x, .f, ...) {
 
 map_lgl <- function(.x, .f, ...) {
   map_mold(.x, .f, logical(1), ...)
+}
+
+
+`%||%` <- function(a, b) {
+  if (!is.null(a)) a else b
 }
