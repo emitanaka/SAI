@@ -57,6 +57,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">model_openai</span><span class="op">(</span></span>
 <span>  model <span class="op">=</span> <span class="st">"gpt-4o-mini"</span>,</span>
 <span>  api <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  format <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  max_tokens <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  temperature <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -72,6 +73,10 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>api</dt>
 <dd><p>The API key to use.</p></dd>
+
+
+<dt>seed</dt>
+<dd><p>The seed to use for the model.</p></dd>
 
 
 <dt>format</dt>
