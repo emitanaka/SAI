@@ -25,6 +25,15 @@
     <loc>https://emitanaka.org/SAI/reference/alcohol.html</loc>
   </url>
   <url>
+    <loc>https://emitanaka.org/SAI/reference/args_model.html</loc>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/SAI/reference/args_ollama.html</loc>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/SAI/reference/args_openai.html</loc>
+  </url>
+  <url>
     <loc>https://emitanaka.org/SAI/reference/as_prompt.html</loc>
   </url>
   <url>
@@ -46,7 +55,13 @@
     <loc>https://emitanaka.org/SAI/reference/messy.html</loc>
   </url>
   <url>
+    <loc>https://emitanaka.org/SAI/reference/model_vendor.html</loc>
+  </url>
+  <url>
     <loc>https://emitanaka.org/SAI/reference/ollama_model_list.html</loc>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/SAI/reference/openai_model_list.html</loc>
   </url>
   <url>
     <loc>https://emitanaka.org/SAI/reference/prompt_user.html</loc>

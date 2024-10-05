@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="The package provides a simple interface to use the large language models to clean data.">
+<meta name="description" content="The package provides a simple interface to use the large language models to clean data. ">
 <title>Standarise data with an AI assistant • SAI</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Standarise data with an AI assistant">
-<meta property="og:description" content="The package provides a simple interface to use the large language models to clean data.">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Standarise data with an AI assistant">
+<meta property="og:description" content="The package provides a simple interface to use the large language models to clean data. ">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -22,7 +22,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary" data-bs-theme="dark"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
     <a class="navbar-brand me-2" href="index.html">SAI</a>
 
@@ -70,22 +70,22 @@
 
 <p>Save time and effort by using SAI to clean and standardise your data. The SAI package is your artificial intelligence (AI) assistant that contain a collection of functions to help you with your data cleaning tasks.</p>
 <p>WARNING: validate that the method works for your own data context.</p>
-<p>The default setting has been set so that the results are reproducible and less prone to “creativity”, as desired for data processing.</p>
+<p>The default setting has been set so that the results are reproducible and less prone to “creativity”, as desired for data processing. The reproducibility is achieved within the same system (i.e. computer) only and not necessarily across different systems.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="section level3">
 <h3 id="large-language-model">Large Language Model<a class="anchor" aria-label="anchor" href="#large-language-model"></a>
 </h3>
-<p>You will also need to set up a large language model (LLM), either by downloading a local LLM via Ollama. To do this see <a href="https://emitanaka.org/SAI/articles/setup-LLM.html"><code>vignette("setup-LLM", package = "SAI")</code></a>.</p>
+<p>You will also need to set up a large language model (LLM), either by downloading a local LLM via Ollama or API access. To do this see <a href="https://emitanaka.org/SAI/articles/setup-LLM.html"><code>vignette("setup-LLM", package = "SAI")</code></a>.</p>
 </div>
 <div class="section level3">
 <h3 id="package">Package<a class="anchor" aria-label="anchor" href="#package"></a>
 </h3>
-<p>You can install the development version of SAI like so:</p>
+<p>You can install the development version of SAI like below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pak</span><span class="op">(</span><span class="st">"emitanaka/SAI"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"emitanaka/SAI"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -139,7 +139,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_option.html">sai_get_option</a></span><span class="op">(</span><span class="st">"model"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "llama3.1:8b"</span></span></code></pre></div>
-<p>You can change the model to another one (provided that it is available in your system) like so:</p>
+<p>You can change the model to another one (provided that it is available in your system) like below:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_option.html">sai_set_option</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="st">"llama3.1:1b"</span><span class="op">)</span></span></code></pre></div>
 <p>Tiny models (1b) are faster but less accurate. It is not recommended to use them for important tasks.</p>
@@ -162,7 +162,7 @@
 <span><span class="co">#&gt;  [8] USA       NZ        NZ        Australia NZ        UK        UK       </span></span>
 <span><span class="co">#&gt; [15] UK        USA       UK        Australia USA       Australia</span></span>
 <span><span class="co">#&gt; Levels: UK USA Canada Australia NZ</span></span></code></pre></div>
-<p>The function actucally works to match a continent as well! Let’s use <code><a href="reference/sai_lvl_match.html">sai_lvl_match()</a></code> to more easily see the conversion on the levels alone.</p>
+<p>The function actually works to match a continent as well! Let’s use <code><a href="reference/sai_lvl_match.html">sai_lvl_match()</a></code> to more easily see the conversion on the levels alone.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_lvl_match.html">sai_lvl_match</a></span><span class="op">(</span><span class="va">messy</span><span class="op">$</span><span class="va">country</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Asia"</span>, <span class="st">"Europe"</span>, <span class="st">"North America"</span>, <span class="st">"Oceania"</span>, <span class="st">"South America"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              UK              US          Canada  United Kingdom             USA </span></span>
@@ -180,20 +180,20 @@
 <span><span class="co">#&gt; 6    New Zealand       Oceania</span></span>
 <span><span class="co">#&gt; 7             NZ       Oceania</span></span>
 <span><span class="co">#&gt; 8      Australia       Oceania</span></span></code></pre></div>
-<p>The above process required specification of all the levels but sometimes you may know not ahead all of the levels. The <code><a href="reference/sai_fct_sweep.html">sai_lvl_sweep()</a></code> function will attempt to clean up the levels. Below it gets most right but classifies “Australia” to be “US”.</p>
+<p>The above process required specification of all the levels but sometimes you may not know ahead all of the levels. The <code><a href="reference/sai_fct_sweep.html">sai_lvl_sweep()</a></code> function will attempt to clean up the levels. Below it gets most right but classifies “Australia” wrong.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_fct_sweep.html">sai_lvl_sweep</a></span><span class="op">(</span><span class="va">messy</span><span class="op">$</span><span class="va">country</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             UK             US         Canada United Kingdom            USA </span></span>
 <span><span class="co">#&gt;           "UK"           "US"       "Canada"           "UK"           "US" </span></span>
 <span><span class="co">#&gt;    New Zealand             NZ      Australia </span></span>
-<span><span class="co">#&gt;           "NZ"           "NZ"           "US"</span></span>
+<span><span class="co">#&gt;  "New Zealand"  "New Zealand"  "New Zealand"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Converted by SAI: ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt;         original converted</span></span>
-<span><span class="co">#&gt; 1    New Zealand        NZ</span></span>
-<span><span class="co">#&gt; 2 United Kingdom        UK</span></span>
-<span><span class="co">#&gt; 3            USA        US</span></span>
-<span><span class="co">#&gt; 4      Australia        US</span></span></code></pre></div>
+<span><span class="co">#&gt;         original   converted</span></span>
+<span><span class="co">#&gt; 1             NZ New Zealand</span></span>
+<span><span class="co">#&gt; 2      Australia New Zealand</span></span>
+<span><span class="co">#&gt; 3 United Kingdom          UK</span></span>
+<span><span class="co">#&gt; 4            USA          US</span></span></code></pre></div>
 <p>If you know the subset of labels that are correct, you can specify this in the argument <code>known</code> like below.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sai_fct_sweep.html">sai_lvl_sweep</a></span><span class="op">(</span><span class="va">messy</span><span class="op">$</span><span class="va">country</span>, known <span class="op">=</span> <span class="st">"Australia"</span><span class="op">)</span></span>
@@ -247,6 +247,21 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; The graph is overlaid with dots of various sizes, which likely represent error bars or confidence intervals for each data point. These dots indicate the range within which the actual values might fall, given the uncertainty associated with the measurements. The image does not contain any text that provides additional context or interpretation of the data.</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="related-packages">Related packages<a class="anchor" aria-label="anchor" href="#related-packages"></a>
+</h2>
+<ul>
+<li><code>air</code></li>
+<li><code>askgpt</code></li>
+<li><code>chatgpt</code></li>
+<li><code>elmer</code></li>
+<li><code>gptchatteR</code></li>
+<li><code>gptstudio</code></li>
+<li><code>gpttools</code></li>
+<li><code>TheOpenAIR</code></li>
+<li><code>tidychatmodels</code></li>
+</ul>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -292,11 +307,13 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Emi Tanaka.</p>
+  <p></p>
+<p>Developed by Emi Tanaka.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer>
