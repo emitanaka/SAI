@@ -33,6 +33,8 @@ for English text.}
 
 \item{stop}{A list of stop sequences to use.}
 
+\item{seed}{The seed to use for the model.}
+
 \item{format}{The format}
 
 \item{safe_prompt}{Whether to use safe prompt or not.}

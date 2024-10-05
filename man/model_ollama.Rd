@@ -11,7 +11,7 @@ model_ollama(
   tools = NULL,
   temperature = 0,
   stop = NA,
-  seed = NA,
+  seed = 0,
   top_k = 1,
   top_p = 0.1,
   num_predict = 1000,

@@ -7,6 +7,7 @@
 model_openai(
   model = "gpt-4o-mini",
   api = NULL,
+  seed = NA,
   format = "none",
   max_tokens = 100,
   temperature = 0,
@@ -19,6 +20,8 @@ model_openai(
 }
 \arguments{
 \item{api}{The API key to use.}
+
+\item{seed}{The seed to use for the model.}
 
 \item{format}{The format}
 

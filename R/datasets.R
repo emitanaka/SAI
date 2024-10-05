@@ -225,7 +225,7 @@
 "recipes"
 
 
-#' Alcohol warehouse adn retail sales
+#' Alcohol warehouse and retail sales
 #'
 #' \describe{
 #' \item{year}{Year}
