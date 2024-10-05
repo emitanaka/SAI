@@ -8,7 +8,6 @@ reference:
   contents:
   - sai_assist
   - sai_yes_no
-  - contains("prompt")
 - title: Categorical variables
   desc:  Help to standardise categorical variables.
   contents:
@@ -22,11 +21,14 @@ reference:
 - title: Describing images
   contents:
   - sai_describe_image
-- title: Options or settings
+- title: Model settings and options
   contents:
   - contains("set_")
   - contains("get_")
-  - ollama_model_list
+  - contains("model_list")
+  - contains("prompt")
+  - contains("model_")
+  - contains("args_")
 - title: Datasets
   contents:
   - airbnb_listings
