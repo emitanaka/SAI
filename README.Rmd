@@ -73,7 +73,7 @@ sai_fct_reorder(likerts$likert1) |> levels()
 
 ### Specifying the LLM
 
-The default large language model is shown below.
+The default large language model and its parameters are shown below.
 
 ```{r}
 sai_get_option("model")
@@ -83,14 +83,14 @@ You can change the model to another one (provided that it is available in your s
 
 ```{r}
 #| eval: false
-sai_set_option("model", "llama3.1:1b")
+sai_set_option("model", model_ollama("llama3.2:1b"))
 ```
 
 Tiny models (1b) are faster but less accurate. It is not recommended to use them for important tasks.
 
 ### Categorise text
 
-Some categorical variables can have simple typos or alternative representations. For example below we have UK written also as "United Kingdom". 
+Some categorical variables can have simple typos or alternative representations. For example below we have "UK" written also as "United Kingdom". 
 
 
 ```{r}
@@ -139,15 +139,15 @@ sai_what_language(text)
 
 ## Images
 
-We may have some plots (or any images) and process these using a multimodal model like `llava`.
+We may have some plots (or image) and process these using a multimodal model like `llava`. This image is available as a link [here](https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png).
 
 ![](https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png){width="40%"}
 
-We can describe the plot with `sai_describe_image()` function. This can be handy to create alt text entries quickly.
+We can describe the plot with `sai_describe_image()` function. The image either has to be a url or path where the image is stored. This can be handy to create alt text entries quickly, but note that the description can have errors (as below).
 
 ```{r}
 sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png",
-                   model = "llava:13b")
+                   model = model_ollama("llava:13b"))
 ```
 
 

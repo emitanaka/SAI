@@ -96,18 +96,53 @@ sai_fct_reorder(likerts$likert1) |> levels()
 
 ### Specifying the LLM
 
-The default large language model is shown below.
+The default large language model and its parameters are shown below.
 
 ``` r
 sai_get_option("model")
+#> $model
 #> [1] "llama3.1:8b"
+#> 
+#> $vendor
+#> [1] "ollama"
+#> 
+#> $args
+#> $args$port
+#> [1] 11434
+#> 
+#> $args$format
+#> [1] "none"
+#> 
+#> $args$tools
+#> NULL
+#> 
+#> $args$temperature
+#> [1] 0
+#> 
+#> $args$stop
+#> [1] NA
+#> 
+#> $args$seed
+#> [1] 0
+#> 
+#> $args$top_k
+#> [1] 1
+#> 
+#> $args$top_p
+#> [1] 0.1
+#> 
+#> $args$num_predict
+#> [1] 1000
+#> 
+#> $args$keep_alive
+#> [1] "5m"
 ```
 
 You can change the model to another one (provided that it is available
 in your system) like below:
 
 ``` r
-sai_set_option("model", "llama3.1:1b")
+sai_set_option("model", model_ollama("llama3.2:1b"))
 ```
 
 Tiny models (1b) are faster but less accurate. It is not recommended to
@@ -116,7 +151,7 @@ use them for important tasks.
 ### Categorise text
 
 Some categorical variables can have simple typos or alternative
-representations. For example below we have UK written also as “United
+representations. For example below we have “UK” written also as “United
 Kingdom”.
 
 ``` r
@@ -220,19 +255,22 @@ sai_what_language(text)
 
 ## Images
 
-We may have some plots (or any images) and process these using a
-multimodal model like `llava`.
+We may have some plots (or image) and process these using a multimodal
+model like `llava`. This image is available as a link
+[here](https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png).
 
 <img
 src="https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png"
 style="width:40.0%" />
 
-We can describe the plot with `sai_describe_image()` function. This can
-be handy to create alt text entries quickly.
+We can describe the plot with `sai_describe_image()` function. The image
+either has to be a url or path where the image is stored. This can be
+handy to create alt text entries quickly, but note that the description
+can have errors (as below).
 
 ``` r
 sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png",
-                   model = "llava:13b")
+                   model = model_ollama("llava:13b"))
 #>  The image is a graphical representation of data comparing plant growth versus treatment across three different groups. There are three lines on the graph, each representing a different group: Control (blue), Treatment 1 (red), and Treatment 2 (green). Each line shows fluctuations over time, with peaks and troughs indicating periods of growth or decline in plant size.
 #> 
 #> The x-axis represents time, with increments that are not specified but appear to be intervals for measuring the growth of plants. The y-axis is labeled "Plant Growth," which suggests that the data points represent the size or health of the plants at each point in time.
