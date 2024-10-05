@@ -57,6 +57,6 @@ sai_what_language <- function(text) {
   map_chr(text, function(x) {
     sai_assist(list(prompt_user(x),
                     prompt_user("What language is the above text in?")),
-               args = args_model(sai_get_option("model")$vendor, format = "json"))[[1]]
+               format = "json")[[1]]
   })
 }

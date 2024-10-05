@@ -5,17 +5,17 @@
 \alias{sai_get_option}
 \alias{sai_set_option}
 \alias{sai_set_model}
-\alias{sai_set_port}
+\alias{sai_set_model_args}
 \alias{sai_set_language}
 \title{Get or set an option for the \code{sai} package}
 \usage{
-sai_get_option(x = c("model", "port", "language", "num_predict", "all"))
+sai_get_option(x = c("model", "language", "all"))
 
-sai_set_option(x = c("model", "port", "num_predict", "language"), val)
+sai_set_option(x = c("model", "language"), val)
 
 sai_set_model(val)
 
-sai_set_port(val)
+sai_set_model_args(...)
 
 sai_set_language(val)
 }

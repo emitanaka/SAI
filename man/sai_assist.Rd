@@ -7,7 +7,7 @@
 sai_assist(
   prompt = NULL,
   model = sai_get_option("model"),
-  args = args_model(vendor),
+  format = model$args$format,
   .content_envir = rlang::caller_env(),
   ...
 )
@@ -16,8 +16,6 @@ sai_assist(
 \item{prompt}{A list of prompts or text with a prompt.}
 
 \item{model}{A list of model and vendor name. Use model helpers like \code{model_ollama()} and \code{model_openai()}.}
-
-\item{args}{The arguments for the \code{model}.}
 }
 \description{
 SAI the general assistant

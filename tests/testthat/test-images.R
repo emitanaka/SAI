@@ -12,5 +12,5 @@ test_that("multiplication works", {
   img <- "https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png"
 
   prompt_user("What does the image contain?", images = tf1) |>
-    sai_assist(model = "llava:7b")
+    sai_assist(model = model_ollama("llava:7b"))
 })

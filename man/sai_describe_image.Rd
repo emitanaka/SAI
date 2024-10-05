@@ -4,11 +4,7 @@
 \alias{sai_describe_image}
 \title{Describe the input image}
 \usage{
-sai_describe_image(
-  x,
-  vendor = sai_get_option("vendor"),
-  model = sai_get_option("model")
-)
+sai_describe_image(x, model = sai_get_option("model"))
 }
 \arguments{
 \item{x}{A url or path to the image.}

@@ -39,7 +39,7 @@ sai_fct_reorder <- function(.f) {
 reorder_2 <- function(lvls, ...) {
   out <- sai_assist("Give the sentiment score, where negative score means negative sentiment,
                      for each level of the input: {lvls*}",
-                    args = args_model(sai_get_option("model")$vendor, format = "json"))
+                    format = "json")
   res <- names(sort(unlist(out)))
   if(length(res) != length(lvls) | !all(res %in% lvls)) {
       cli::cli_warn("Could not reorder the levels meaningfully.")
@@ -60,7 +60,7 @@ reorder_3 <- function(lvls, ...) {
                     Neutral elements should have a score of 0.
                     Just give the scores.
                     If 'not applicable' or 'not answered', assign NA."), dots),
-                    args = args_model(sai_get_option("model")$vendor, format = "json"))
+                    format = "json")
   vec <- unlist(out)
   # break ties
   if(any(duplicated(vec))) {
@@ -73,7 +73,7 @@ reorder_3 <- function(lvls, ...) {
                     Neutral elements should have a score of 0.
                     Just give the scores for each element.
                     If 'not applicable' or 'not answered', assign NA."), dots),
-                       args = args_model(sai_get_option("model")$vendor, format = "json"))
+                    format = "json")
     vec2 <- unlist(out2)
     vec2 <- vec2 / sum(vec2)
     vec[vec %in% dups] <- vec[vec %in% dups] + vec2
@@ -205,7 +205,7 @@ sai_lvl_match <- function(.f, levels = NULL, ...) {
                            Return 'NA' if no match, not confident or not sure.
                            "),
                     ...),
-               args = args_model(sai_get_option("model")$vendor, format = "json"))[[1]]
+               format = "json")[[1]]
   })
   out <- unname(unlist(matched))
   out[!out %in% levels] <- NA

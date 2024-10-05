@@ -37,7 +37,7 @@ Check the version of ollama.
 ollama --version
 ```
 
-Pull a LLM, say `llama3.1:8b` (see list of models available [here](https://ollama.com/library)). Currently `r SAI::sai_get_option("model")` is the default.
+Pull a LLM, say `llama3.1:8b` (see list of models available [here](https://ollama.com/library)). Currently `r SAI::sai_get_option("model")$model` is the default.
 
 ```
 ollama pull llama3.1:8b

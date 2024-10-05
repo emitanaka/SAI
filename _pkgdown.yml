@@ -28,7 +28,6 @@ reference:
   - contains("model_list")
   - contains("prompt")
   - contains("model_")
-  - contains("args_")
 - title: Datasets
   contents:
   - airbnb_listings
