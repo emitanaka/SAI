@@ -3,8 +3,8 @@
 #' This function re-formats dates based on ...
 #'
 #' @param dates_vector A character vector that is assumed to be dates.
-#' @param input_format
-#' @param output_format A date format value to specify output date format.
+#' @param input_format A character value to specify input date format.
+#' @param output_format A character value to specify output date format.
 #'
 #' @export
 sai_date_format <- function(dates_vector, input_format = "DDMMYYYY", output_format = "YYYYMMDD", copy = FALSE, ...) {
