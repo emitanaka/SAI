@@ -4,20 +4,14 @@
 \alias{sai_clean_date}
 \title{Standardise date format}
 \usage{
-sai_clean_date(
-  dates_vector,
-  input_format = "DD/MM/YYYY",
-  output_format = "YYYY-MM-DD",
-  copy = FALSE,
-  ...
-)
+sai_clean_date(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...)
 }
 \arguments{
 \item{dates_vector}{A character vector that is assumed to be dates.}
 
 \item{input_format}{A character value to specify input date format.}
 
-\item{output_format}{A character value to specify output date format.}
+\item{...}{Extra options for the large language model.}
 }
 \description{
 This function standardise inconsistent date formats.
