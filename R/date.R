@@ -17,5 +17,5 @@ sai_clean_date <- function(dates_vector, input_format = "DD/MM/YYYY", output_for
             If the input is not date, return NA.")),
     format = "json")
   if(copy) clipr::write_clip(paste0(deparse(out), collapse = ""))
-  out
+  as.Date(out[[1]])
 }
