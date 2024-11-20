@@ -7,7 +7,7 @@
 #' @param output_format A character value to specify output date format.
 #'
 #' @export
-sai_clean_date <- function(dates_vector, input_format = "DDMMYYYY", output_format = "YYYYMMDD", copy = FALSE, ...) {
+sai_clean_date <- function(dates_vector, input_format = "DD/MM/YYYY", output_format = "YYYY-MM-DD", copy = FALSE, ...) {
   out <- sai_assist(
     c(list("The input data is a vector of dates, the input dates are in format of {input_format*}.
             InputData = {dates_vector*}.
@@ -19,4 +19,3 @@ sai_clean_date <- function(dates_vector, input_format = "DDMMYYYY", output_forma
   if(copy) clipr::write_clip(paste0(deparse(out), collapse = ""))
   out
 }
-
