@@ -16,3 +16,9 @@ sai_clean_date(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...)
 \description{
 This function standardise inconsistent date formats.
 }
+\examples{
+x <- c("12/05/2024", "11/15/2024", "02/25/2024")
+sai_clean_date(x, input_format = "MM/DD/YYYY")
+
+
+}

@@ -6,6 +6,13 @@
 #' @param input_format A character value to specify input date format.
 #' @param ... Extra options for the large language model.
 #'
+#' @examples
+#' x <- c("12/05/2024", "11/15/2024", "02/25/2024")
+#' sai_clean_date(x, input_format = "MM/DD/YYYY")
+#'
+#'
+#'
+#'
 #' @export
 sai_clean_date <- function(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...) {
   out <- sai_assist(
