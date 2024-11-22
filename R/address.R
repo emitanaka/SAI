@@ -1,24 +1,26 @@
 #' Standardise address format
 #'
-#' This function standardise inconsistent address formats.
+#' This function standardise inconsistent address formats to a standard format.
 #'
 #' @param address_vector A character vector that is assumed to be addresses.
-#' @param output_format A character value to specify output address format.
+#' @examples
+#' # Convert a vector of inconsistent formatted address to a standard format
+#' x <- c("68/150 Acton Road, Acton ACT 2601","655 Jackson St, Dickson ACT 2602","Unit 60, 523 Joey Cct, Layton NSW 6500","23/100 de burgh road, Southbank VIC 7800","999 Lords pl, Sydney nsw 6600","i don't know the address")
+#' sai_clean_address(x)
+#' # `copy = TRUE` copies the output into clipboard in a format that can be entered easily in the user's script
 #'
 #' @export
-sai_clean_address <- function(address_vector, output_format = "155/255 Dickson St, Acton ACT 2602", copy = FALSE, ...){
+sai_clean_address <- function(address_vector, copy = FALSE){
   out <- sai_assist(
-    c(list("The input data {address_vector*} is a vector of messy addresses.
-            You need to standardise the input address to the format like {output_format*}.
-            Example 1:
-            Input: 'Unit 2, 100 Wentworth Place, Newtown NSW 6800',
-            Output: '2/100 Wentworth Pl, Newtown NSW 6800'.
-            Example 2:
-            Input: '658 cleaning street, daton nsw 6900',
-            Output: '658 Cleaning St, Daton NSW 6900'.
-            Only return the output address in a vector format.
-            If the input is not address, return NA.")),
+    c(list("Can you help me convert my address data to a standard format?
+            My address data is {address_vector*}.
+            Use full street name.
+            Convert 'Unit Number Street Name' to 'Number/Number Street Name'.
+            First letter uppercase.
+            Only return me the converted addresses in a vector format.
+            Return NA if it is not an address.")),
     format = "json")
   if(copy) clipr::write_clip(paste0(deparse(out), collapse = ""))
-  out
+  out[[1]]
 }
+
