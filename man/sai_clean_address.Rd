@@ -14,7 +14,7 @@ This function standardise inconsistent address formats to a standard format.
 }
 \examples{
 # Convert a vector of inconsistent formatted address to a standard format
-x <- c("68/150 Acton Road, Acton ACT 2601","655 Jackson St, Dickson ACT 2602","Unit 60, 523 Joey Cct, Layton NSW 6500","23/100 de burgh road, Southbank VIC 7800","999 Lords pl, Sydney nsw 6600","i don't know the address")
+x <- c("68/150 Acton Road, Acton ACT 2601","655 Jackson St, Dickson ACT 2602","Unit 60 523 Joey Cct, Layton NSW 6500","23/100 de burgh road, Southbank VIC 7800","999 Lords pl, Sydney nsw 6600","i don't know the address")
 sai_clean_address(x)
 # `copy = TRUE` copies the output into clipboard in a format that can be entered easily in the user's script
 

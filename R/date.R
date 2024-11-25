@@ -9,7 +9,7 @@
 #' @examples
 #' x <- c("12/05/2024", "11/15/2024", "02/25/2024")
 #' sai_clean_date(x, input_format = "MM/DD/YYYY")
-#'
+#' # `copy = TRUE` copies the output into clipboard in a format that can be entered easily in the user's script
 #'
 #'
 #'
