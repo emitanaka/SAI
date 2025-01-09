@@ -145,11 +145,41 @@ We may have some plots (or image) and process these using a multimodal model lik
 
 We can describe the plot with `sai_describe_image()` function. The image either has to be a url or path where the image is stored. This can be handy to create alt text entries quickly, but note that the description can have errors (as below).
 
-```{r}
+```{r, eval=FALSE}
 sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png",
                    model = model_ollama("llava:13b"))
 ```
 
+## Dates
+
+When combining data from different sources, inconsistencies in date formats can occur frequently. Reformatting dates to a single format using traditional programming requires listing all possible date formats and can be time-consuming. The `sai_clean_date()` function uses an LLM to standardise the dates to the international standard "YYYY-MM-DD".
+
+```{r}
+x <- c("16/02/1997", "20 November 2024", "24 Mar 2022", "2000-01-01",
+       "Jason", "Dec 25, 2030", "12/05/2024")
+sai_clean_date(x)
+```
+
+By default, the function interprets dates in the format "XX/XX/YYYY" as the European style "DD/MM/YYYY". If the dates are in the US style "MM/DD/YYYY", you can specify the input date format using the `input_format` option. 
+
+```{r}
+x <- c("12/05/2024", "Nov 15, 2024", "02/25/2024")
+sai_clean_date(x, input_format = "MM/DD/YYYY")
+```
+
+## Addresses 
+
+When scraping data from websites or APIs, especially property-related information, addresses can present challenges. The `sai_clean_address()` function uses an LLM to standardise addresses into a consistent format and returns an empty value for items that are not addresses. 
+
+```{r}
+x <- c("68/150 Acton Road, Acton ACT 2601",
+       "655 Jackson St, Dickson ACT 2602",
+       "Unit 60 523 Joey Cct, Layton NSW 6500",
+       "23/100 de burgh road, Southbank VIC 7800",
+       "91 Sullivan pl, Sydney nsw 6600",
+       "i don't know the address")
+sai_clean_address(x)
+```
 
 ## Related packages 
 

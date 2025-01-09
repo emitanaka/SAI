@@ -206,14 +206,14 @@ sai_lvl_sweep(messy$country)
 #>             UK             US         Canada United Kingdom            USA 
 #>           "UK"           "US"       "Canada"           "UK"           "US" 
 #>    New Zealand             NZ      Australia 
-#>  "New Zealand"  "New Zealand"  "New Zealand"
+#>           "NZ"           "NZ"           "US"
 #> 
 #> ── Converted by SAI: ───────────────────────────────────────────────────────────
-#>         original   converted
-#> 1             NZ New Zealand
-#> 2      Australia New Zealand
-#> 3 United Kingdom          UK
-#> 4            USA          US
+#>         original converted
+#> 1    New Zealand        NZ
+#> 2 United Kingdom        UK
+#> 3            USA        US
+#> 4      Australia        US
 ```
 
 If you know the subset of labels that are correct, you can specify this
@@ -243,7 +243,7 @@ languages.
 text <- c("猿も木から落ちる", "你好", "bon appetit")
 sai_translate(text)
 #> [1] "Even monkeys fall from trees." "Hello"                        
-#> [3] "Good appetite."
+#> [3] "Good appetite!"
 ```
 
 You can also try to identify the language in the text.
@@ -271,20 +271,56 @@ can have errors (as below).
 ``` r
 sai_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png",
                    model = model_ollama("llava:13b"))
-#>  The image is a graphical representation of data comparing plant growth versus treatment across three different groups. There are three lines on the graph, each representing a different group: Control (blue), Treatment 1 (red), and Treatment 2 (green). Each line shows fluctuations over time, with peaks and troughs indicating periods of growth or decline in plant size.
-#> 
-#> The x-axis represents time, with increments that are not specified but appear to be intervals for measuring the growth of plants. The y-axis is labeled "Plant Growth," which suggests that the data points represent the size or health of the plants at each point in time.
-#> 
-#> There are three distinct sets of data points, corresponding to the three different treatments: Control (blue), Treatment 1 (red), and Treatment 2 (green). The control group shows a relatively stable growth pattern with some fluctuations, while the treatment groups show more pronounced peaks and troughs, indicating that they have a greater impact on plant growth compared to the control.
-#> 
-#> The graph is overlaid with dots of various sizes, which likely represent error bars or confidence intervals for each data point. These dots indicate the range within which the actual values might fall, given the uncertainty associated with the measurements. The image does not contain any text that provides additional context or interpretation of the data.
-#>  The image is a graphical representation of data comparing plant growth versus treatment across three different groups. There are three lines on the graph, each representing a different group: Control (blue), Treatment 1 (red), and Treatment 2 (green). Each line shows fluctuations over time, with peaks and troughs indicating periods of growth or decline in plant size.
-#> 
-#> The x-axis represents time, with increments that are not specified but appear to be intervals for measuring the growth of plants. The y-axis is labeled "Plant Growth," which suggests that the data points represent the size or health of the plants at each point in time.
-#> 
-#> There are three distinct sets of data points, corresponding to the three different treatments: Control (blue), Treatment 1 (red), and Treatment 2 (green). The control group shows a relatively stable growth pattern with some fluctuations, while the treatment groups show more pronounced peaks and troughs, indicating that they have a greater impact on plant growth compared to the control.
-#> 
-#> The graph is overlaid with dots of various sizes, which likely represent error bars or confidence intervals for each data point. These dots indicate the range within which the actual values might fall, given the uncertainty associated with the measurements. The image does not contain any text that provides additional context or interpretation of the data.
+```
+
+## Dates
+
+When combining data from different sources, inconsistencies in date
+formats can occur frequently. Reformatting dates to a single format
+using traditional programming requires listing all possible date formats
+and can be time-consuming. The `sai_clean_date()` function uses an LLM
+to standardise the dates to the international standard “YYYY-MM-DD”.
+
+``` r
+x <- c("16/02/1997", "20 November 2024", "24 Mar 2022", "2000-01-01",
+       "Jason", "Dec 25, 2030", "12/05/2024")
+sai_clean_date(x)
+#> [1] "1997-02-16" "2024-11-20" "2022-03-24" "2000-01-01" NA          
+#> [6] "2030-12-25" "2024-05-12"
+```
+
+By default, the function interprets dates in the format “XX/XX/YYYY” as
+the European style “DD/MM/YYYY”. If the dates are in the US style
+“MM/DD/YYYY”, you can specify the input date format using the
+`input_format` option.
+
+``` r
+x <- c("12/05/2024", "Nov 15, 2024", "02/25/2024")
+sai_clean_date(x, input_format = "MM/DD/YYYY")
+#> [1] "2024-12-05" "2024-11-15" "2024-02-25"
+```
+
+## Addresses
+
+When scraping data from websites or APIs, especially property-related
+information, addresses can present challenges. The `sai_clean_address()`
+function uses an LLM to standardise addresses into a consistent format
+and returns an empty value for items that are not addresses.
+
+``` r
+x <- c("68/150 Acton Road, Acton ACT 2601",
+       "655 Jackson St, Dickson ACT 2602",
+       "Unit 60 523 Joey Cct, Layton NSW 6500",
+       "23/100 de burgh road, Southbank VIC 7800",
+       "91 Sullivan pl, Sydney nsw 6600",
+       "i don't know the address")
+sai_clean_address(x)
+#> [1] "68/150 Acton Road, Acton ACT 2601"       
+#> [2] "655 Jackson Street, Dickson ACT 2602"    
+#> [3] "60/523 Joey Circuit, Layton NSW 6500"    
+#> [4] "23/100 De Burgh Road, Southbank VIC 7800"
+#> [5] "91 Sullivan Place, Sydney NSW 6600"      
+#> [6] ""
 ```
 
 ## Related packages
