@@ -1,5 +1,5 @@
 Package: SAI
-Title: Standarise data with an AI assistant
+Title: Standarise text data with an AI assistant
 Version: 0.0.0.9000
 Authors@R: 
     person("Emi", "Tanaka", , "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"),
@@ -13,6 +13,7 @@ Imports:
     base64enc,
     cli,
     clipr,
+    ellmer,
     glue,
     httr2,
     jsonlite,
