@@ -4,7 +4,8 @@
 
 library(dplyr)
 library(stringr)
-#library(SAI)
+library(stringdist)
+library(SAI)
 
 load("~/GitHub/SAI/data/salary.rda")
 
@@ -155,7 +156,43 @@ data_clean <- gsub("^(Trinidad And Tobago)$", "Trinidad and Tobago", data_clean)
 truth <- unique(data_clean)
 sort(truth)
 
+### test for amatch() ###
+result_amatch_code <- amatch(data, truth, maxDist = Inf)
+result_amatch <- truth[result_amatch_code]
+sum(data_clean == result_amatch, na.rm = TRUE) #14497
+
 ### test for llama3.1:8b ###
+# embedding length 4096
 sai_set_option("model", model_ollama("llama3.1:8b"))
 result_llama31_8b <- sai_fct_match(data, levels = truth)
+write.csv(result_llama31_8b, "result_llama31_8b.csv", row.names = FALSE)
+sum(data_clean == result_llama31_8b, na.rm = TRUE) #28052
+
+### test for deepseek-r1:1.5b ###
+### error subscript out of bound ###
+# maybe because out of context length
+# no, i think it's because embedding length
+# because the context length of deepseek-r1:1.5b and llama3.1:8b are the same
+# embedding length 1536
+sai_set_option("model", model_ollama("deepseek-r1:1.5b"))
+result_deepseekr1_1dot5b <- sai_fct_match(data, levels = truth)
+
+### test for deepseek-r1:7b ###
+### this one no error, so for smaller models embedding length is a problem ###
+# embedding length 3584
+sai_set_option("model", model_ollama("deepseek-r1:7b"))
+result_deepseekr1_7b <- sai_fct_match(data, levels = truth)
+
+### test for llama3.2:3b ###
+sai_set_option("model", model_ollama("llama3.2"))
+result_llama32_3b <- sai_fct_match(data, levels = truth)
+
+### test for llama3.2:1b ###
+sai_set_option("model", model_ollama("llama3.2:1b"))
+result_llama32_1b <- sai_fct_match(data, levels = truth)
+
+### test for
+
+
+
 
