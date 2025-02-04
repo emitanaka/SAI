@@ -6,6 +6,7 @@ library(dplyr)
 library(stringr)
 library(stringdist)
 library(SAI)
+library(openxlsx)
 
 load("~/GitHub/SAI/data/salary.rda")
 
@@ -161,6 +162,32 @@ result_amatch_code <- amatch(data, truth, maxDist = Inf)
 result_amatch <- truth[result_amatch_code]
 sum(data_clean == result_amatch, na.rm = TRUE) #14497
 
+### test for llama3.2:1b ###
+# the response is not in json format
+# took 1.5 hour to run
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("llama3.2:1b"))
+result_llama32_1b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_llama32_1b, "result_llama32_1b.csv", row.names = FALSE)
+sum(data_clean == result_llama32_1b, na.rm = TRUE) #11199
+
+### test for llama3.2:3b ###
+# run for 1.8 hours
+# very low accuracy...
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("llama3.2"))
+result_llama32_3b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_llama32_3b, "result_llama32_3b.csv", row.names = FALSE)
+sum(data_clean == result_llama32_3b, na.rm = TRUE) #2634
+
 ### test for llama3.1:8b ###
 # embedding length 4096
 sai_set_option("model", model_ollama("llama3.1:8b"))
@@ -169,30 +196,114 @@ write.csv(result_llama31_8b, "result_llama31_8b.csv", row.names = FALSE)
 sum(data_clean == result_llama31_8b, na.rm = TRUE) #28052
 
 ### test for deepseek-r1:1.5b ###
-### error subscript out of bound ###
+# error subscript out of bound
 # maybe because out of context length
 # no, i think it's because embedding length
 # because the context length of deepseek-r1:1.5b and llama3.1:8b are the same
 # embedding length 1536
+# deepseek returns answer with a thinking section and emojis
+# maybe that's the problem
+
 sai_set_option("model", model_ollama("deepseek-r1:1.5b"))
 result_deepseekr1_1dot5b <- sai_fct_match(data, levels = truth)
 
 ### test for deepseek-r1:7b ###
-### this one no error, so for smaller models embedding length is a problem ###
+# this one no error, so for smaller models embedding length is a problem ###
 # embedding length 3584
+# no this one didn't work as well, so probably not the embedding length
+# same error
+# it took me 6 hours to run, then got an error at the end???
 sai_set_option("model", model_ollama("deepseek-r1:7b"))
 result_deepseekr1_7b <- sai_fct_match(data, levels = truth)
 
-### test for llama3.2:3b ###
-sai_set_option("model", model_ollama("llama3.2"))
-result_llama32_3b <- sai_fct_match(data, levels = truth)
+### test for mistral:7b ###
+# run for 2.5 hours
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("mistral"))
+result_mistral_7b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_mistral_7b, "result_mistral_7b.csv", row.names = FALSE)
+sum(data_clean == result_mistral_7b, na.rm = TRUE) #28048
+
+### test for qwen2.5:1.5b ###
+# run for 34 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("qwen2.5:1.5b"))
+result_qwen25_1dot5b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_qwen25_1dot5b, "result_qwen25_1dot5b.csv", row.names = FALSE)
+sum(data_clean == result_qwen25_1dot5b, na.rm = TRUE) #12840
+
+### test for qwen2.5:7b ###
+# run for 2.64 hours
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("qwen2.5:7b"))
+result_qwen25_7b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_qwen25_7b, "result_qwen25_7b.csv", row.names = FALSE)
+sum(data_clean == result_qwen25_7b, na.rm = TRUE) #27893
+
+### test for gemma2:2b ###
+# error:
+# Error in sai_assist(list(prompt_user("For '{x}' (which may be an acronym) return the best match from {levels*}.\n                           Return 'NA' if no match, not confident or not sure.\n                           "),  : subscript out of bounds
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("gemma2:2b"))
+result_gemma2_2b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_gemma2_2b, "result_gemma2_2b.csv", row.names = FALSE)
+sum(data_clean == result_gemma2_2b, na.rm = TRUE)
+
+### test for phi:2.7b ###
+# the response is not in JSON format
+# run for 1.5 hours
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("phi:2.7b"))
+result_phi_2dot7b <- sai_fct_match(data, levels = truth)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_phi_2dot7b, "result_phi_2dot7b.csv", row.names = FALSE)
+sum(data_clean == result_phi_2dot7b, na.rm = TRUE) #3741
+
+### test for yi:6b ###
+
+### test for glm4:9b ###
+
+
+################# calculate for registration data #########################
+data_reg <- read.xlsx("registration_data.xlsx")
+reg_truth_levels <- unique(data_reg$GroundTruth)
+truth_registration <- data_reg$GroundTruth
+messy_registration <- data_reg$Affiliation
+
+### test for amatch() ###
+
+result_reg_amatch_code <- amatch(messy_registration, truth_levels, maxDist = Inf)
+result_reg_amatch <- reg_truth_levels[result_reg_amatch_code]
+sum(truth_registration == result_reg_amatch, na.rm = TRUE) #81/221
 
 ### test for llama3.2:1b ###
+# run for 22 mins
+start_time <- Sys.time()
 sai_set_option("model", model_ollama("llama3.2:1b"))
-result_llama32_1b <- sai_fct_match(data, levels = truth)
+reg_result_llama32_1b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
 
-### test for
-
-
-
+write.csv(reg_result_llama32_1b, "reg_result_llama32_1b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_llama32_1b, na.rm = TRUE) #8/221
 
