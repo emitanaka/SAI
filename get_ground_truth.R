@@ -8,7 +8,8 @@ library(stringdist)
 library(SAI)
 library(openxlsx)
 
-load("~/GitHub/SAI/data/salary.rda")
+load("data/salary.rda")
+load("data/registration.rda")
 
 # check missing value
 salary %>% summarise(missing_values = sum(is.na(salary$country)))
@@ -157,6 +158,9 @@ data_clean <- gsub("^(Trinidad And Tobago)$", "Trinidad and Tobago", data_clean)
 truth <- unique(data_clean)
 sort(truth)
 
+### lowest accuracy ###
+sum(data_clean == data) #13390/28083
+
 ### test for amatch() ###
 result_amatch_code <- amatch(data, truth, maxDist = Inf)
 result_amatch <- truth[result_amatch_code]
@@ -284,19 +288,17 @@ sum(data_clean == result_phi_2dot7b, na.rm = TRUE) #3741
 
 
 ################# calculate for registration data #########################
-data_reg <- read.xlsx("registration_data.xlsx")
-reg_truth_levels <- unique(data_reg$GroundTruth)
-truth_registration <- data_reg$GroundTruth
-messy_registration <- data_reg$Affiliation
+reg_truth_levels <- unique(registration$GroundTruth)
+truth_registration <- registration$GroundTruth
+messy_registration <- registration$Affiliation
 
 ### test for amatch() ###
-
-result_reg_amatch_code <- amatch(messy_registration, truth_levels, maxDist = Inf)
+result_reg_amatch_code <- amatch(messy_registration, reg_truth_levels, maxDist = Inf)
 result_reg_amatch <- reg_truth_levels[result_reg_amatch_code]
-sum(truth_registration == result_reg_amatch, na.rm = TRUE) #81/221
+sum(truth_registration == result_reg_amatch, na.rm = TRUE) #83/221
 
 ### test for llama3.2:1b ###
-# run for 22 mins
+# run for 16.9 mins
 start_time <- Sys.time()
 sai_set_option("model", model_ollama("llama3.2:1b"))
 reg_result_llama32_1b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
@@ -304,6 +306,81 @@ end_time <- Sys.time()
 execution_time <- end_time - start_time
 print(execution_time)
 
-write.csv(reg_result_llama32_1b, "reg_result_llama32_1b.csv", row.names = FALSE)
-sum(truth_registration == reg_result_llama32_1b, na.rm = TRUE) #8/221
+write.csv(reg_result_llama32_1b, "results/reg_result_llama32_1b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_llama32_1b, na.rm = TRUE) #9/221
 
+### test for llama3.2:3b ###
+# run for 19 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("llama3.2"))
+reg_result_llama32_3b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_llama32_3b, "results/reg_result_llama32_3b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_llama32_3b, na.rm = TRUE) #3/221
+
+### test for llama3.1:8b ###
+# run for 31 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("llama3.1:8b"))
+reg_result_llama31_8b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_llama31_8b, "results/reg_result_llama31_8b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_llama31_8b, na.rm = TRUE) #197/221
+
+### test for mistral:7b ###
+# run for 35 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("mistral"))
+reg_result_mistral_7b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_mistral_7b, "results/reg_result_mistral_7b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_mistral_7b, na.rm = TRUE) #199/221
+
+### test for qwen2.5:1.5b ###
+# run for 8 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("qwen2.5:1.5b"))
+reg_result_qwen25_1dot5b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_qwen25_1dot5b, "results/reg_result_qwen25_1dot5b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_qwen25_1dot5b, na.rm = TRUE) #154/221
+
+### test for qwen2.5:7b ###
+# run for 40 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("qwen2.5:7b"))
+reg_result_qwen25_7b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_qwen25_7b, "results/reg_result_qwen25_7b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_qwen25_7b, na.rm = TRUE) #159/221
+
+### test for phi:2.7b ###
+# the response is not in JSON format
+# run for 25 mins
+start_time <- Sys.time()
+sai_set_option("model", model_ollama("phi:2.7b"))
+reg_result_phi_2dot7b <- sai_fct_match(messy_registration, levels = reg_truth_levels)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_phi_2dot7b, "results/reg_result_phi_2dot7b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_phi_2dot7b, na.rm = TRUE) #5/221
+
+### lowest accuracy ###
+sum(messy_registration == truth_registration) #47/221
