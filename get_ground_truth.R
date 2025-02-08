@@ -5,7 +5,6 @@
 library(dplyr)
 library(stringr)
 library(stringdist)
-library(SAI)
 library(openxlsx)
 
 load("data/salary.rda")
@@ -384,3 +383,28 @@ sum(truth_registration == reg_result_phi_2dot7b, na.rm = TRUE) #5/221
 
 ### lowest accuracy ###
 sum(messy_registration == truth_registration) #47/221
+
+################# new fct_match() #########################################
+################# calculate for registration data #########################
+load("data/registration.rda")
+reg_truth_levels <- unique(registration$GroundTruth)
+truth_registration <- registration$GroundTruth
+messy_registration <- registration$Affiliation
+
+### test for amatch() ###
+result_reg_amatch_code <- amatch(messy_registration, reg_truth_levels, maxDist = Inf)
+result_reg_amatch <- reg_truth_levels[result_reg_amatch_code]
+sum(truth_registration == result_reg_amatch, na.rm = TRUE) #83/221
+
+### test for llama3.1:8b ###
+# run for 31 mins
+start_time <- Sys.time()
+chat <- chat_ollama(model = "llama3.1:8b")
+reg_result_llama31_8b <- fct_match(messy_registration, reg_truth_levels, chat)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(reg_result_llama31_8b, "results/new_reg_result_llama31_8b.csv", row.names = FALSE)
+sum(truth_registration == reg_result_llama31_8b, na.rm = TRUE) #197/221
+
