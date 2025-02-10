@@ -2,6 +2,8 @@
 # https://en.wikipedia.org/wiki/List_of_sovereign_states
 # https://www.dfat.gov.au/geo/country-briefs
 
+library(SAI)
+
 library(dplyr)
 library(stringr)
 library(stringdist)
@@ -163,7 +165,7 @@ sum(data_clean == data) #13390/28083
 ### test for amatch() ###
 result_amatch_code <- amatch(data, truth, maxDist = Inf)
 result_amatch <- truth[result_amatch_code]
-sum(data_clean == result_amatch, na.rm = TRUE) #14497
+sum(data_clean == result_amatch, na.rm = TRUE) #14497/28083
 
 ### test for llama3.2:1b ###
 # the response is not in json format
@@ -397,7 +399,7 @@ result_reg_amatch <- reg_truth_levels[result_reg_amatch_code]
 sum(truth_registration == result_reg_amatch, na.rm = TRUE) #83/221
 
 ### test for llama3.1:8b ###
-# run for 31 mins
+# ran for 3.72 hours
 start_time <- Sys.time()
 chat <- chat_ollama(model = "llama3.1:8b")
 reg_result_llama31_8b <- fct_match(messy_registration, reg_truth_levels, chat)
@@ -406,5 +408,16 @@ execution_time <- end_time - start_time
 print(execution_time)
 
 write.csv(reg_result_llama31_8b, "results/new_reg_result_llama31_8b.csv", row.names = FALSE)
-sum(truth_registration == reg_result_llama31_8b, na.rm = TRUE) #197/221
+sum(truth_registration == reg_result_llama31_8b, na.rm = TRUE) #194/221
 
+################# calculate for country data #########################
+# run for 7.49 hours
+start_time <- Sys.time()
+chat <- chat_ollama(model = "llama3.1:8b", echo = "none")
+result_llama31_8b <- fct_match(data, levels = truth, chat)
+end_time <- Sys.time()
+execution_time <- end_time - start_time
+print(execution_time)
+
+write.csv(result_llama31_8b, "results/new_country_result_llama31_8b.csv", row.names = FALSE)
+sum(data_clean == result_llama31_8b, na.rm = TRUE) #27972/28083

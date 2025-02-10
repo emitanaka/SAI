@@ -1,7 +1,3 @@
-library(ellmer)
-
-options(ellmer_timeout_s = 360000)
-
 #' Match the input factor to supplied levels
 #'
 #' @param .f A factor.
@@ -9,9 +5,9 @@ options(ellmer_timeout_s = 360000)
 #' @param chat The chat environment from ellmer.
 #' @param ... Other prompts to the LLM.
 #'
-#' @seealso [sai_lvl_sweep()]
+#' @seealso [lvl_sweep()]
 #' @export
-lvl_match <- function(.f, levels = NULL, chat, ...) {
+lvl_match <- function(.f, levels = NULL, chat = NULL, ...) {
   if(is.null(levels)) cli::cli_abort("Please provide the levels of the factor.")
   if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
 
@@ -20,15 +16,11 @@ lvl_match <- function(.f, levels = NULL, chat, ...) {
 
   matched <- lapply(lvls_unmatched, function(x){
     chat$chat(paste0(
-      "You are a data cleaning expert. ",
-      "Standardise the following input text into one of the levels from: ",
-      paste(levels, collapse = ","), ". ",
-      "If no match, return 'Unidentified'. Return result only. ",
-      "No code writing. ",
-      ...,
-      "Input: 'messy_text' ",
-      "Output: 'level' ",
-      "Now process: ", x
+      "For '", x, "' (which may be an acronym) return the best match from ",
+      paste(levels, collapse = ", "), ". ",
+      "Return 'Unidentified' if no match, not confident or not sure.
+      Return result only. No code writing or commentary. ",
+      ...
     ))
   })
 
@@ -57,14 +49,229 @@ print.lvl_match <- function(x, ...) {
 
 #' @rdname lvl_match
 #' @export
-fct_match <- function(.f, levels = NULL, chat, ...) {
+fct_match <- function(.f, levels = NULL, chat = NULL, ...) {
   dict <- lvl_match(.f, levels, chat, ...)
   factor(unname(unclass(dict)[.f]), levels = levels)
 }
 
-messy <-  c("USA", "UK", "U.S.", "England", "united state", "United States", "United Kingdom")
-levels <-  c("United States", "United Kingdom", "Unidentified")
+#' @rdname lvl_order
+#' @export
+fct_reorder <- function(.f, chat = NULL, ...) {
+  if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
+  lvls <- lvl_order(.f, chat, ...)
+  factor(.f, levels = lvls)
+}
 
-chat <- chat_ollama(model = "llama3.1:8b")
-cleaned_data <- fct_match(messy, levels, chat)
-cleaned_data
+#' Reorder levels of an ordinal factor
+#'
+#' This function reorders the levels of a factor based on the sentiment scores of the levels.
+#' Using this function can be expensive (depending on the LLM used and user's computer spec)
+#' so users may wish to use this interactively only and copy the output into their script.
+#'
+#' @param .f A character vector that is assumed to be an ordinal factor.
+#' @param chat An ellmer chat object.
+#' @param copy A logical value to indicate whether the output should be copied into the
+#'  user's clipboard.
+#' @param ... Extra prompts to the LLM.
+#' @examples
+#' # to get the new level order
+#' # users should check if the new order
+#' lvl_order(likerts$likert1)
+#' # `copy = TRUE` copies the output into clipboard in a format that can be
+#' # entered easiliy in the user's script
+#' lvl_order(likerts$likert1, copy = TRUE)
+#' # to apply the new levels directly to the input
+#' fct_reorder(likerts$likert1)
+#'
+#' @export
+lvl_order <- function(.f, chat = NULL, copy = FALSE, ...) {
+  lvls <- unique(.f)
+  res <- reorder_3(lvls, chat, ...)
+  if(copy) clipr::write_clip(paste0(deparse(res), collapse = ""))
+  res
+}
+
+# works for all
+reorder_3 <- function(lvls, chat = NULL, ...) {
+  out <- chat$chat(paste0(
+                    "Rank the sentiment scores for each level of the input: ",
+                    paste(lvls, collapse = ", "), ". ",
+                    "Positive connotations like satisfied or likely should have positive scores.
+                    Negative connotations like unsatisfied or unlikely should have negative scores.
+                    Satisfied should have a higher score than somewhat satisfied.
+                    Agree should have a higher score than somewhat agree.
+                    Neutral elements should have a score of 0.
+                    Just give the scores. Return result only in JSON object.
+                    Return a valid JSON object without any backticks around it.
+                    No commentary. "))
+  out_json <- jsonlite::fromJSON(out)
+  vec <- unlist(out_json)
+  # break ties
+  if(any(duplicated(vec))) {
+    dups <- vec[duplicated(vec)]
+    out2 <- chat$chat(paste0(
+                    "Rank the sentiment scores for each level of the input: ",
+                    paste(lvls[vec %in% dups], collapse = ", "), ". ",
+                    "Positive connotations like satisfied or likely should have positive scores.
+                    Negative connotations like unsatisfied or unlikely should have negative scores.
+                    Satisfied should have a higher score than somewhat satisfied.
+                    Agree should have a higher score than somewhat agree.
+                    Neutral elements should have a score of 0.
+                    Just give the scores. Return result only in JSON object.
+                    Return a valid JSON object without any backticks around it.
+                    No commentary.  ",
+                    ...
+                  ))
+    out2_json <- jsonlite::fromJSON(out2)
+    vec2 <- unlist(out2_json)
+    vec2 <- vec2 / sum(vec2)
+    vec[vec %in% dups] <- vec[vec %in% dups] + vec2
+  }
+  res <- names(sort(vec))
+  if(length(vec) != length(lvls)) {
+    cli::cli_warn("Could not reorder the levels meaningfully.")
+    return(lvls)
+  }
+  if(!all(res %in% lvls)) {
+    res <- names(sort(setNames(vec, lvls)))
+  }
+  res
+}
+
+#' Sweep factor levels to group similar levels together
+#'
+#' This function attempts to automatically standardise input labels that should
+#' have been the same by making a few assumptions. The assumptions include that
+#' the levels with high frequency are correct and low frequency levels may contain
+#' typos or alternative representation of other existing levels.
+#'
+#' Be warned that this function is experimental and may not work as intended.
+#'
+#' @param .f A factor
+#' @param chat A predefined ellmer chat object.
+#' @param known A character vector of the levels that are known to be correct. If none
+#'   are provided, it is assumed that no correct values are known. If an element has a name
+#'   associated with it, it is assumed that the name is what is recorded and the value is
+#'   what the actual label should be.
+#' @param wrong A character vector of the levels known to be wrong and should be
+#'   grouped with another level.
+#' @param nlevels_max The maximum number of levels.
+#' @param nlevels_min The minimum number of levels.
+#' @param nlevels_top The number of levels that are correct based on the top frequencies, excluding
+#'  levels that have observations less than `n_min`.
+#' @param nlevels_bottom The number of levels that are incorrect based on the bottom frequencies,
+#'   excluding those that have observation less than `n_min`.
+#' @param n_min The minimum of observations for each level. The default is 1.
+#' @param ... Extra prompts to the LLM.
+#' @seealso [lvl_match()]
+#' @export
+fct_sweep <- function(.f, chat = NULL,
+                          known = NULL,
+                          wrong = NULL,
+                          nlevels_max = length(unique(.f)) - length(wrong),
+                          nlevels_min = length(unique(known)) + 1,
+                          nlevels_top = round(nlevels_max * 0.25),
+                          nlevels_bottom = 0,
+                          n_min = 1L,
+                          ...) {
+  if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
+
+  abort_if_not_chr(.f)
+  if(!is.null(known)) abort_if_not_chr(known)
+  abort_if_not_single_numeric(n_min)
+  abort_if_not_single_numeric(nlevels_max)
+  abort_if_not_single_numeric(nlevels_min)
+
+  if(is.null(known)) {
+    lvls_known <- character(0)
+    f <- .f
+  } else {
+    lvls_known <- unique(known)
+    nms_known <- names(known)
+    nms_known[nms_known == ""] <- known[nms_known == ""]
+    lvls_missing <- setdiff(unique(.f), nms_known)
+    dict_all <- c(nms_known, setNames(lvls_missing, lvls_missing))
+    # fix up all the known ones
+    f <- dict_all[.f]
+  }
+  tt <- table(f)
+  wrong <- unique(c(wrong, setdiff(names(tt)[tt < n_min], known)))
+
+  if(nlevels_top > 0) {
+    top <- setdiff(setdiff(names(tt[rank(-tt) <= nlevels_top]), wrong), known)
+    ntop <- max(nlevels_max - length(unique(known)), length(top), 0)
+    if(length(top)) top <- top[seq(ntop)]
+    known <- unique(c(known, top))
+  }
+
+  if(nlevels_bottom > 0) {
+    wrong <- unique(c(wrong, setdiff(names(tt[rank(tt) <= nlevels_bottom]), known)))
+  }
+
+  unknown <- setdiff(unique(f), c(wrong, known))
+  if(length(wrong)) {
+    dict <- lvl_match(wrong, levels = c(unknown, known), "Only match if supremely confident using trusted sources.")
+    dict <- na.omit(dict)
+  } else {
+    dict <- NULL
+    unknown_set <- unknown
+    for(x in unknown) {
+      d <- lvl_match(x, levels = c(known, setdiff(unknown_set, x)), "Only match if supremely confident  using trusted sources.")
+      if(!is.na(d)) {
+        unknown_set <- setdiff(unknown_set, names(d))
+        dict <- c(dict, d)
+      }
+    }
+  }
+  lvl_unmatched <- setdiff(unique(f), names(dict))
+  dict_all <- c(dict, setNames(lvl_unmatched, lvl_unmatched))
+  known_updated <- c(known, setdiff(dict, known))
+  new_f <- dict_all[f]
+  nl <- length(unique(f))
+  if(nl <= nlevels_max & nl >= nlevels_min) return(factor(new_f, levels = unique(new_f)))
+  out <- sai_fct_sweep(unname(new_f), known = known_updated, nlevels_max = nlevels_max, nlevels_min = nlevels_min,
+                       nlevels_top = nlevels_top, nlevels_bottom = nlevels_bottom, n_min = n_min)
+  setNames(out, .f)
+}
+
+#' @rdname fct_sweep
+#' @export
+lvl_sweep <- function(.f, chat = NULL,
+                          known = NULL,
+                          wrong = NULL,
+                          nlevels_max = length(unique(.f)) - length(wrong),
+                          nlevels_min = length(unique(known)) + 1,
+                          nlevels_top = round(nlevels_max * 0.25),
+                          nlevels_bottom = 0,
+                          n_min = 1L,
+                          ...) {
+  dict <- fct_sweep(.f, chat,
+                        known = known,
+                        wrong = wrong,
+                        nlevels_max = nlevels_max,
+                        nlevels_min = nlevels_min,
+                        nlevels_top = nlevels_top,
+                        nlevels_bottom = nlevels_bottom,
+                        n_min = n_min,
+                        ...)
+
+  res <- setNames(as.character(dict), .f)
+  structure(res[!duplicated(paste0(res, names(res)))], class = c("lvl_match", class(res)))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
