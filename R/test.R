@@ -2,21 +2,29 @@
 #'
 #' @param .f A factor.
 #' @param levels The levels of the factor.
-#' @param chat The chat environment from ellmer.
+#' @param model The model defined by set_model.
 #' @param ... Other prompts to the LLM.
 #'
 #' @seealso [lvl_sweep()]
 #' @export
-lvl_match <- function(.f, levels = NULL, chat = NULL, ...) {
+lvl_match <- function(.f, levels = NULL, model = NULL, ...) {
   if(is.null(levels)) cli::cli_abort("Please provide the levels of the factor.")
-  if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
+  if(is.null(model)) cli::cli_abort("Please provide the chat environment.")
 
   lvls_unmatched <- setdiff(unique(.f), levels)
   lvls_intersect <- intersect(unique(.f), levels)
 
+  if (model$provider == "ollama") {
+    chat <- ellmer::chat_ollama(model = model$model_name)
+  } else if (model$provider == "openai") {
+    chat <- ellmer::chat_openai(model = model$model_name)
+  } else {
+    print("Your model is not supported by emend.")
+  }
+
   matched <- lapply(lvls_unmatched, function(x){
     chat$chat(paste0(
-      "For '", x, "' (which may be an acronym) return the best match from ",
+      "For '", x, "' (which may be an acronym) return the best match from: ",
       paste(levels, collapse = ", "), ". ",
       "Return 'Unidentified' if no match, not confident or not sure.
       Return result only. No code writing or commentary. ",
@@ -56,9 +64,9 @@ fct_match <- function(.f, levels = NULL, chat = NULL, ...) {
 
 #' @rdname lvl_order
 #' @export
-fct_reorder <- function(.f, chat = NULL, ...) {
-  if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
-  lvls <- lvl_order(.f, chat, ...)
+fct_reorder <- function(.f, model = NULL, ...) {
+  if(is.null(model)) cli::cli_abort("Please provide the chat environment.")
+  lvls <- lvl_order(.f, model, ...)
   factor(.f, levels = lvls)
 }
 
@@ -69,7 +77,7 @@ fct_reorder <- function(.f, chat = NULL, ...) {
 #' so users may wish to use this interactively only and copy the output into their script.
 #'
 #' @param .f A character vector that is assumed to be an ordinal factor.
-#' @param chat An ellmer chat object.
+#' @param model A model defined by set_model.
 #' @param copy A logical value to indicate whether the output should be copied into the
 #'  user's clipboard.
 #' @param ... Extra prompts to the LLM.
@@ -84,15 +92,24 @@ fct_reorder <- function(.f, chat = NULL, ...) {
 #' fct_reorder(likerts$likert1)
 #'
 #' @export
-lvl_order <- function(.f, chat = NULL, copy = FALSE, ...) {
+lvl_order <- function(.f, model = NULL, copy = FALSE, ...) {
   lvls <- unique(.f)
-  res <- reorder_3(lvls, chat, ...)
+  res <- reorder_3(lvls, model, ...)
   if(copy) clipr::write_clip(paste0(deparse(res), collapse = ""))
   res
 }
 
 # works for all
-reorder_3 <- function(lvls, chat = NULL, ...) {
+reorder_3 <- function(lvls, model = NULL, ...) {
+
+  if (model$provider == "ollama") {
+    chat <- ellmer::chat_ollama(model = model$model_name)
+  } else if (model$provider == "openai") {
+    chat <- ellmer::chat_openai(model = model$model_name)
+  } else {
+    print("Your model is not supported by emend.")
+  }
+
   out <- chat$chat(paste0(
                     "Rank the sentiment scores for each level of the input: ",
                     paste(lvls, collapse = ", "), ". ",
@@ -138,140 +155,75 @@ reorder_3 <- function(lvls, chat = NULL, ...) {
   res
 }
 
-#' Sweep factor levels to group similar levels together
+#' Clean up the levels for the input factor.
 #'
-#' This function attempts to automatically standardise input labels that should
-#' have been the same by making a few assumptions. The assumptions include that
-#' the levels with high frequency are correct and low frequency levels may contain
-#' typos or alternative representation of other existing levels.
+#' @param .f A factor.
+#' @param model The model defined by set_model.
+#' @param ... Other prompts to the LLM.
 #'
-#' Be warned that this function is experimental and may not work as intended.
-#'
-#' @param .f A factor
-#' @param chat A predefined ellmer chat object.
-#' @param known A character vector of the levels that are known to be correct. If none
-#'   are provided, it is assumed that no correct values are known. If an element has a name
-#'   associated with it, it is assumed that the name is what is recorded and the value is
-#'   what the actual label should be.
-#' @param wrong A character vector of the levels known to be wrong and should be
-#'   grouped with another level.
-#' @param nlevels_max The maximum number of levels.
-#' @param nlevels_min The minimum number of levels.
-#' @param nlevels_top The number of levels that are correct based on the top frequencies, excluding
-#'  levels that have observations less than `n_min`.
-#' @param nlevels_bottom The number of levels that are incorrect based on the bottom frequencies,
-#'   excluding those that have observation less than `n_min`.
-#' @param n_min The minimum of observations for each level. The default is 1.
-#' @param ... Extra prompts to the LLM.
-#' @seealso [lvl_match()]
 #' @export
-fct_sweep <- function(.f, chat = NULL,
-                          known = NULL,
-                          wrong = NULL,
-                          nlevels_max = length(unique(.f)) - length(wrong),
-                          nlevels_min = length(unique(known)) + 1,
-                          nlevels_top = round(nlevels_max * 0.25),
-                          nlevels_bottom = 0,
-                          n_min = 1L,
-                          ...) {
-  if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
+lvl_sweep <- function(.f, model = NULL, ...){
+  if(is.null(model)) cli::cli_abort("Please provide the chat environment.")
 
-  abort_if_not_chr(.f)
-  if(!is.null(known)) abort_if_not_chr(known)
-  abort_if_not_single_numeric(n_min)
-  abort_if_not_single_numeric(nlevels_max)
-  abort_if_not_single_numeric(nlevels_min)
-
-  if(is.null(known)) {
-    lvls_known <- character(0)
-    f <- .f
+  if (model$provider == "ollama") {
+    chat <- ellmer::chat_ollama(model = model$model_name)
+  } else if (model$provider == "openai") {
+    chat <- ellmer::chat_openai(model = model$model_name)
   } else {
-    lvls_known <- unique(known)
-    nms_known <- names(known)
-    nms_known[nms_known == ""] <- known[nms_known == ""]
-    lvls_missing <- setdiff(unique(.f), nms_known)
-    dict_all <- c(nms_known, setNames(lvls_missing, lvls_missing))
-    # fix up all the known ones
-    f <- dict_all[.f]
-  }
-  tt <- table(f)
-  wrong <- unique(c(wrong, setdiff(names(tt)[tt < n_min], known)))
-
-  if(nlevels_top > 0) {
-    top <- setdiff(setdiff(names(tt[rank(-tt) <= nlevels_top]), wrong), known)
-    ntop <- max(nlevels_max - length(unique(known)), length(top), 0)
-    if(length(top)) top <- top[seq(ntop)]
-    known <- unique(c(known, top))
+    print("Your model is not supported by emend.")
   }
 
-  if(nlevels_bottom > 0) {
-    wrong <- unique(c(wrong, setdiff(names(tt[rank(tt) <= nlevels_bottom]), known)))
-  }
-
-  unknown <- setdiff(unique(f), c(wrong, known))
-  if(length(wrong)) {
-    dict <- lvl_match(wrong, levels = c(unknown, known), "Only match if supremely confident using trusted sources.")
-    dict <- na.omit(dict)
-  } else {
-    dict <- NULL
-    unknown_set <- unknown
-    for(x in unknown) {
-      d <- lvl_match(x, levels = c(known, setdiff(unknown_set, x)), "Only match if supremely confident  using trusted sources.")
-      if(!is.na(d)) {
-        unknown_set <- setdiff(unknown_set, names(d))
-        dict <- c(dict, d)
-      }
-    }
-  }
-  lvl_unmatched <- setdiff(unique(f), names(dict))
-  dict_all <- c(dict, setNames(lvl_unmatched, lvl_unmatched))
-  known_updated <- c(known, setdiff(dict, known))
-  new_f <- dict_all[f]
-  nl <- length(unique(f))
-  if(nl <= nlevels_max & nl >= nlevels_min) return(factor(new_f, levels = unique(new_f)))
-  out <- sai_fct_sweep(unname(new_f), known = known_updated, nlevels_max = nlevels_max, nlevels_min = nlevels_min,
-                       nlevels_top = nlevels_top, nlevels_bottom = nlevels_bottom, n_min = n_min)
-  setNames(out, .f)
+  levels_0 <- unique(.f)
+  levels_chat <- chat$chat(paste0(
+                  "I have a list of text data and they are messy. ",
+                  "Please convert it to a standardised category. ",
+                  "Use full names. ",
+                  ...,
+                  "Now process: ",
+                  paste(levels_0, collapse = ", "), ". ",
+                  "Return result only in a pairwise JSON object. No commentary.
+                  No code writing.
+                  Example output:
+                  {'original': 'standardised',
+                   'original': 'standardised'}. "))
+  levels_1 <- unlist(jsonlite::fromJSON(levels_chat))
+  result <- dplyr::recode(.f, !!!levels_1)
+  dict <- setNames(result, .f)
+  structure(dict, class = c("lvl_sweep", class(dict)))
 }
 
-#' @rdname fct_sweep
 #' @export
-lvl_sweep <- function(.f, chat = NULL,
-                          known = NULL,
-                          wrong = NULL,
-                          nlevels_max = length(unique(.f)) - length(wrong),
-                          nlevels_min = length(unique(known)) + 1,
-                          nlevels_top = round(nlevels_max * 0.25),
-                          nlevels_bottom = 0,
-                          n_min = 1L,
-                          ...) {
-  dict <- fct_sweep(.f, chat,
-                        known = known,
-                        wrong = wrong,
-                        nlevels_max = nlevels_max,
-                        nlevels_min = nlevels_min,
-                        nlevels_top = nlevels_top,
-                        nlevels_bottom = nlevels_bottom,
-                        n_min = n_min,
-                        ...)
-
-  res <- setNames(as.character(dict), .f)
-  structure(res[!duplicated(paste0(res, names(res)))], class = c("lvl_match", class(res)))
+format.lvl_sweep <- function(x, ...) {
+  out <- data.frame(original = names(x), converted = unname(unclass(x))) |>
+    subset(is.na(converted) | original != converted)
+  out <- out[order(out$converted), ]
+  rownames(out) <- NULL
+  out
 }
 
+#' @export
+print.lvl_sweep <- function(x, ...) {
+  print(unclass(x))
+  cli::cli_h1("Converted by SAI:")
+  out <- format(x)
+  print(out, ...)
+}
 
+#' Define the model you are going to use for the analyses.
+#' @param provider The provider name. Choose one from {"ollama", "openai"}.
+#' @param model The model name, e.g. "llama3.1:8b" for Ollama and "gpt-4o-mini" for OpenAI.
+#'
+#' @export
+set_model <- function(provider = NULL, model = NULL) {
+  if(is.null(provider)) cli::cli_abort("Please provide the provider name.")
+  if(is.null(model)) cli::cli_abort("Please provide the model name.")
 
+  model_info <- list(
+    provider = provider,
+    model_name = model
+  )
 
-
-
-
-
-
-
-
-
-
-
-
+  return(model_info)
+}
 
 
