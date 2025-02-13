@@ -1,11 +1,12 @@
-#' Match the input factor to supplied levels
+#' Match the input factor to supplied levels.
 #'
 #' @param .f A factor.
 #' @param levels The levels of the factor.
-#' @param model The model defined by set_model.
+#' @param model The model defined by [set_model()].
 #' @param ... Other prompts to the LLM.
 #'
 #' @seealso [lvl_sweep()]
+#'
 #' @export
 lvl_match <- function(.f, levels = NULL, model = NULL, ...) {
   if(is.null(levels)) cli::cli_abort("Please provide the levels of the factor.")
@@ -57,8 +58,8 @@ print.lvl_match <- function(x, ...) {
 
 #' @rdname lvl_match
 #' @export
-fct_match <- function(.f, levels = NULL, chat = NULL, ...) {
-  dict <- lvl_match(.f, levels, chat, ...)
+fct_match <- function(.f, levels = NULL, model = NULL, ...) {
+  dict <- lvl_match(.f, levels, model, ...)
   factor(unname(unclass(dict)[.f]), levels = levels)
 }
 
@@ -77,10 +78,11 @@ fct_reorder <- function(.f, model = NULL, ...) {
 #' so users may wish to use this interactively only and copy the output into their script.
 #'
 #' @param .f A character vector that is assumed to be an ordinal factor.
-#' @param model A model defined by set_model.
+#' @param model A model defined by [set_model()].
 #' @param copy A logical value to indicate whether the output should be copied into the
 #'  user's clipboard.
 #' @param ... Extra prompts to the LLM.
+#'
 #' @examples
 #' # to get the new level order
 #' # users should check if the new order
@@ -111,9 +113,9 @@ reorder_3 <- function(lvls, model = NULL, ...) {
   }
 
   out <- chat$chat(paste0(
-                    "Rank the sentiment scores for each level of the input: ",
-                    paste(lvls, collapse = ", "), ". ",
-                    "Positive connotations like satisfied or likely should have positive scores.
+    "Rank the sentiment scores for each level of the input: ",
+    paste(lvls, collapse = ", "), ". ",
+    "Positive connotations like satisfied or likely should have positive scores.
                     Negative connotations like unsatisfied or unlikely should have negative scores.
                     Satisfied should have a higher score than somewhat satisfied.
                     Agree should have a higher score than somewhat agree.
@@ -127,9 +129,9 @@ reorder_3 <- function(lvls, model = NULL, ...) {
   if(any(duplicated(vec))) {
     dups <- vec[duplicated(vec)]
     out2 <- chat$chat(paste0(
-                    "Rank the sentiment scores for each level of the input: ",
-                    paste(lvls[vec %in% dups], collapse = ", "), ". ",
-                    "Positive connotations like satisfied or likely should have positive scores.
+      "Rank the sentiment scores for each level of the input: ",
+      paste(lvls[vec %in% dups], collapse = ", "), ". ",
+      "Positive connotations like satisfied or likely should have positive scores.
                     Negative connotations like unsatisfied or unlikely should have negative scores.
                     Satisfied should have a higher score than somewhat satisfied.
                     Agree should have a higher score than somewhat agree.
@@ -137,8 +139,8 @@ reorder_3 <- function(lvls, model = NULL, ...) {
                     Just give the scores. Return result only in JSON object.
                     Return a valid JSON object without any backticks around it.
                     No commentary.  ",
-                    ...
-                  ))
+      ...
+    ))
     out2_json <- jsonlite::fromJSON(out2)
     vec2 <- unlist(out2_json)
     vec2 <- vec2 / sum(vec2)
@@ -158,7 +160,7 @@ reorder_3 <- function(lvls, model = NULL, ...) {
 #' Clean up the levels for the input factor.
 #'
 #' @param .f A factor.
-#' @param model The model defined by set_model.
+#' @param model The model defined by [set_model()].
 #' @param ... Other prompts to the LLM.
 #'
 #' @export
@@ -175,13 +177,13 @@ lvl_sweep <- function(.f, model = NULL, ...){
 
   levels_0 <- unique(.f)
   levels_chat <- chat$chat(paste0(
-                  "I have a list of text data and they are messy. ",
-                  "Please convert it to a standardised category. ",
-                  "Use full names. ",
-                  ...,
-                  "Now process: ",
-                  paste(levels_0, collapse = ", "), ". ",
-                  "Return result only in a pairwise JSON object. No commentary.
+    "I have a list of text data and they are messy. ",
+    "Please convert it to a standardised category. ",
+    "Use full names. ",
+    ...,
+    "Now process: ",
+    paste(levels_0, collapse = ", "), ". ",
+    "Return result only in a pairwise JSON object. No commentary.
                   No code writing.
                   Example output:
                   {'original': 'standardised',
@@ -208,22 +210,3 @@ print.lvl_sweep <- function(x, ...) {
   out <- format(x)
   print(out, ...)
 }
-
-#' Define the model you are going to use for the analyses.
-#' @param provider The provider name. Choose one from {"ollama", "openai"}.
-#' @param model The model name, e.g. "llama3.1:8b" for Ollama and "gpt-4o-mini" for OpenAI.
-#'
-#' @export
-set_model <- function(provider = NULL, model = NULL) {
-  if(is.null(provider)) cli::cli_abort("Please provide the provider name.")
-  if(is.null(model)) cli::cli_abort("Please provide the model name.")
-
-  model_info <- list(
-    provider = provider,
-    model_name = model
-  )
-
-  return(model_info)
-}
-
-
