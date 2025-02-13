@@ -1,23 +1,24 @@
-Package: SAI
+Package: emend
 Title: Standarise text data with an AI assistant
 Version: 0.0.0.9000
 Authors@R: 
-    person("Emi", "Tanaka", , "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"),
-           comment = c(ORCID = "0000-0002-1455-259X"))
+    c(person("Emi", "Tanaka", "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"),
+             comment = c(ORCID = "0000-0002-1455-259X")),
+      person("Jiajia", "Li", "lijia970324@gmail.com", role = c("aut"), 
+             comment = c(ORCID = "0009-0003-7143-9336")))
 Description: The package provides a simple interface to use the large language models to clean data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
-    base64enc,
     cli,
     clipr,
     ellmer,
     glue,
-    httr2,
     jsonlite,
-    stringr
+    stringr,
+    dplyr
 Depends: 
     R (>= 2.10)
 LazyData: true

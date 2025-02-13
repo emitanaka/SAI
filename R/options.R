@@ -1,6 +1,6 @@
 
-op.sai <- list(sai.model = model_ollama(.check_model_availability = FALSE),
-               sai.language = "English")
+# op.sai <- list(sai.model = model_ollama(.check_model_availability = FALSE),
+               # sai.language = "English")
 
 
 #' @name sai_option

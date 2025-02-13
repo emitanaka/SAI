@@ -4,7 +4,7 @@
 \name{SAI-package}
 \alias{SAI}
 \alias{SAI-package}
-\title{SAI: Standarise data with an AI assistant}
+\title{SAI: Standarise text data with an AI assistant}
 \description{
 The package provides a simple interface to use the large language models to clean data.
 }
