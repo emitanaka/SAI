@@ -43,33 +43,14 @@ pak::pak("emitanaka/emend")
 
 
 
-## Example
+## Examples
 
 
 ```{r}
 library(emend)
 ```
 
-### Correcting order of levels for ordinal variables
 
-The levels of categorical variables by default are ordered alphabetically. This can be problematic when the levels have a natural order.
-
-```{r}
-factor(likerts$likert1)
-```
-
-A correct order may need to be manually specified like below, but it can be a tedious task.
-
-```{r}
-factor(likerts$likert1, 
-       levels = c("Strongly Disagree", "Disagree", "Somewhat Disagree", "Neutral", "Somewhat Agree", "Agree", "Strongly Agree")) 
-```
-
-The `emend_fct_reorder()` function will try to reorder the levels of the factor in a meaningful way _automatically_ using a large language model. 
-
-```{r}
-emend_fct_reorder(likerts$likert1) |> levels()
-```
 
 ### Specifying the LLM
 
@@ -120,6 +101,28 @@ If you know the subset of labels that are correct, you can specify this in the a
 
 ```{r}
 emend_lvl_sweep(messy$country, known = "Australia")
+```
+
+
+### Correcting order of levels for ordinal variables
+
+The levels of categorical variables by default are ordered alphabetically. This can be problematic when the levels have a natural order.
+
+```{r}
+factor(likerts$likert1)
+```
+
+A correct order may need to be manually specified like below, but it can be a tedious task.
+
+```{r}
+factor(likerts$likert1, 
+       levels = c("Strongly Disagree", "Disagree", "Somewhat Disagree", "Neutral", "Somewhat Agree", "Agree", "Strongly Agree")) 
+```
+
+The `emend_fct_reorder()` function will try to reorder the levels of the factor in a meaningful way _automatically_ using a large language model. 
+
+```{r}
+emend_fct_reorder(likerts$likert1) |> levels()
 ```
 
 ### Translate
