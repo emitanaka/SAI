@@ -1,10 +1,10 @@
 Package: emend
-Title: Standarise text data with an AI assistant
+Title: Cleaning text data with an AI assistant
 Version: 0.0.0.9000
 Authors@R: 
-    person("Emi", "Tanaka", , "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"),
-           comment = c(ORCID = "0000-0002-1455-259X"))
-Description: The package provides a simple interface to use the large language models to clean data. 
+    c(person("Emi", "Tanaka", , "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-1455-259X")),
+      person("Jiajia", "Li", role = "aut"))
+Description: The package provides a simple interface to use the large language models to clean text data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -26,6 +26,6 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/emitanaka/SAI, http://emitanaka.org/SAI/
-BugReports: https://github.com/emitanaka/SAI/issues
+URL: https://github.com/emitanaka/emend, http://emitanaka.org/emend/
+BugReports: https://github.com/emitanaka/emend/issues
 VignetteBuilder: knitr
