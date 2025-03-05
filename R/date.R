@@ -8,14 +8,14 @@
 #'
 #' @examples
 #' x <- c("12/05/2024", "11/15/2024", "02/25/2024")
-#' sai_clean_date(x, input_format = "MM/DD/YYYY")
+#' emend_clean_date(x, input_format = "MM/DD/YYYY")
 #' # `copy = TRUE` copies the output into clipboard in a format that can be entered easily in the user's script
 #'
 #'
 #'
 #' @export
-sai_clean_date <- function(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...) {
-  out <- sai_assist(
+emend_clean_date <- function(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...) {
+  out <- emend_assist(
     c(list("The input data is a vector of dates, the input dates are in format of {input_format*}.
             InputData = {dates_vector*}.
             Input data are in different date format.

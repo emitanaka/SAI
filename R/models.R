@@ -141,7 +141,7 @@ model_mistral <- function(model = "open-mistral-7b",
 #'
 #' @param port The port number.
 #' @export
-ollama_model_list <- function(port = sai_get_option("model")$args$port) {
+ollama_model_list <- function(port = emend_get_option("model")$args$port) {
   request <- httr2::request(base_url = paste0('http://localhost:', port, '/api/tags'))
   response <- httr2::req_perform(request)
   json <- httr2::resp_body_json(response)

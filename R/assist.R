@@ -1,10 +1,10 @@
-#' SAI the general assistant
+#' emend the general assistant
 #'
 #' @param prompt A list of prompts or text with a prompt.
 #' @param model A list of model and vendor name. Use model helpers like `model_ollama()` and `model_openai()`.
 #' @export
-sai_assist <- function(prompt = NULL,
-                       model = sai_get_option("model"),
+emend_assist <- function(prompt = NULL,
+                       model = emend_get_option("model"),
                        format = model$args$format,
                        .content_envir = rlang::caller_env(),
                        ...) {
@@ -87,11 +87,11 @@ sai_assist <- function(prompt = NULL,
     cli::cli_abort("Currently the only vendor supported is Ollama and OpenAI.")
   }
 
-  structure(content, class = c("sai", class(content)))
+  structure(content, class = c("emend", class(content)))
 }
 
 #' @export
-print.sai <- function(x, ...) {
+print.emend <- function(x, ...) {
   if(is.list(x)) {
     print(unclass(x))
   } else if(is.character(x)) {
@@ -104,8 +104,8 @@ print.sai <- function(x, ...) {
 #'
 #' @param prompt A prompt.
 #' @export
-sai_yes_no <- function(prompt) {
+emend_yes_no <- function(prompt) {
   if(is.character(prompt)) prompt <- list(prompt_user(prompt))
-  out <- sai_assist(c(prompt, list(prompt_user("Answer with 'yes' or 'no'."))))
+  out <- emend_assist(c(prompt, list(prompt_user("Answer with 'yes' or 'no'."))))
   grepl("yes", tolower(out))
 }

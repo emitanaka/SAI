@@ -4,7 +4,7 @@
 \alias{ollama_model_list}
 \title{Get the list of ollama models available locally}
 \usage{
-ollama_model_list(port = sai_get_option("model")$args$port)
+ollama_model_list(port = emend_get_option("model")$args$port)
 }
 \arguments{
 \item{port}{The port number.}

@@ -14,12 +14,10 @@ is_base64 <- function(x) {
 #'
 #' @param x A url or path to the image.
 #' @param model The LLM to use.
-#'
-#' @export
-sai_describe_image <- function(x,
-                               model = sai_get_option("model")) {
+emend_describe_image <- function(x,
+                               model = emend_get_option("model")) {
 
   if(model$vendor=="ollama" && !grepl("llava", model$model)) cli::cli_abort("For ollama models, only multimodal models like {.var llava} can process images. Use the argument say {.code model = \"llava:8b\"}.")
-  sai_assist(prompt_user("Describe the image.", images = x),
+  emend_assist(prompt_user("Describe the image.", images = x),
              model = model)
 }

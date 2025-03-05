@@ -1,58 +1,58 @@
 
-op.sai <- list(sai.model = model_ollama(.check_model_availability = FALSE),
-               sai.language = "English")
+op.emend <- list(emend.model = model_ollama(.check_model_availability = FALSE),
+               emend.language = "English")
 
 
-#' @name sai_option
+#' @name emend_option
 NULL
 
-#' Get or set an option for the `sai` package
+#' Get or set an option for the `emend` package
 #'
 #' @param x The name of the option to get or set.
 #' @param val The value of the option to set.
-#' @rdname sai_option
+#' @rdname emend_option
 #' @export
-sai_get_option <- function(x = c("model", "language", "all")) {
+emend_get_option <- function(x = c("model", "language", "all")) {
   x <- match.arg(x)
   if(x == "all") {
-    op.sai
+    op.emend
   } else {
-    opt_name <- paste0("sai.", x)
+    opt_name <- paste0("emend.", x)
     res <- getOption(opt_name)
     if(!is.null(res)) return(res)
-    op.sai[[opt_name]]
+    op.emend[[opt_name]]
   }
 }
 
 
-#' @rdname sai_option
+#' @rdname emend_option
 #' @export
-sai_set_option <- function(x = c("model", "language"), val) {
+emend_set_option <- function(x = c("model", "language"), val) {
   x <- match.arg(x)
-  args <- setNames(list(val), paste0("sai.", x))
+  args <- setNames(list(val), paste0("emend.", x))
   do.call(options, args)
 }
 
-#' @rdname sai_option
+#' @rdname emend_option
 #' @export
-sai_set_model <- function(val) {
-  options(sai.model = val)
+emend_set_model <- function(val) {
+  options(emend.model = val)
 }
 
-#' @rdname sai_option
+#' @rdname emend_option
 #' @export
-sai_set_model_args <- function(...) {
+emend_set_model_args <- function(...) {
   args <- list(...)
-  model <- getOption("sai.model") %||% op.sai[["sai.model"]]
-    ifelse(is.null(res), op.sai[["sai.model"]], )
+  model <- getOption("emend.model") %||% op.emend[["emend.model"]]
+    ifelse(is.null(res), op.emend[["emend.model"]], )
   for(nm in names(args)) model[[nm]] <- args[[nm]]
-  options(sai.model = model)
+  options(emend.model = model)
 }
 
 
-#' @rdname sai_option
+#' @rdname emend_option
 #' @export
-sai_set_language <- function(val) {
-  options(sai.language = val)
+emend_set_language <- function(val) {
+  options(emend.language = val)
 }
 

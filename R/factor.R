@@ -12,32 +12,32 @@
 #' @examples
 #' # to get the new level order
 #' # users should check if the new order
-#' sai_lvl_order(likerts$likert1)
+#' emend_lvl_order(likerts$likert1)
 #' # `copy = TRUE` copies the output into clipboard in a format that can be
 #' # entered easiliy in the user's script
-#' sai_lvl_order(likerts$likert1, copy = TRUE)
+#' emend_lvl_order(likerts$likert1, copy = TRUE)
 #' # to apply the new levels directly to the input
-#' sai_fct_reorder(likerts$likert1)
+#' emend_fct_reorder(likerts$likert1)
 #'
 #' @export
-sai_lvl_order <- function(.f, copy = FALSE, ...) {
+emend_lvl_order <- function(.f, copy = FALSE, ...) {
   lvls <- unique(.f)
   res <- reorder_3(lvls, ...)
   if(copy) clipr::write_clip(paste0(deparse(res), collapse = ""))
   res
 }
 
-#' @rdname sai_lvl_order
+#' @rdname emend_lvl_order
 #' @export
-sai_fct_reorder <- function(.f) {
-  lvls <- sai_lvl_order(.f)
+emend_fct_reorder <- function(.f) {
+  lvls <- emend_lvl_order(.f)
   factor(.f, levels = lvls)
 }
 
 
 # This seems to be better
 reorder_2 <- function(lvls, ...) {
-  out <- sai_assist("Give the sentiment score, where negative score means negative sentiment,
+  out <- emend_assist("Give the sentiment score, where negative score means negative sentiment,
                      for each level of the input: {lvls*}",
                     format = "json")
   res <- names(sort(unlist(out)))
@@ -52,7 +52,7 @@ reorder_2 <- function(lvls, ...) {
 # works for all
 reorder_3 <- function(lvls, ...) {
   dots <- list(...)
-  out <- sai_assist(c(list("Rank the sentiment scores for each level of the input: {lvls*}.
+  out <- emend_assist(c(list("Rank the sentiment scores for each level of the input: {lvls*}.
                     Positive connotations like satisfied or likely should have positive scores.
                     Negative connotations like unsatisfied or unlikely should have negative scores.
                     Satisfied should have a higher score than somewhat satisfied.
@@ -65,7 +65,7 @@ reorder_3 <- function(lvls, ...) {
   # break ties
   if(any(duplicated(vec))) {
     dups <- vec[duplicated(vec)]
-    out2 <- sai_assist(c(list("Rank the sentiment scores for each level of the input: {lvls[vec %in% dups]*}.
+    out2 <- emend_assist(c(list("Rank the sentiment scores for each level of the input: {lvls[vec %in% dups]*}.
                     Positive connotations like satisfied or likely should have positive scores.
                     Negative connotations like unsatisfied or unlikely should have negative scores.
                     Satisfied should have a higher score than somewhat satisfied.
@@ -117,9 +117,9 @@ reorder_3 <- function(lvls, ...) {
 #' @param nlevels_bottom The number of levels that are incorrect based on the bottom frequencies,
 #'   excluding those that have observation less than `n_min`.
 #' @param n_min The minimum of observations for each level. The default is 1.
-#' @seealso [sai_lvl_match()]
+#' @seealso [emend_lvl_match()]
 #' @export
-sai_fct_sweep <- function(.f,
+emend_fct_sweep <- function(.f,
                           known = NULL,
                           wrong = NULL,
                           nlevels_max = length(unique(.f)) - length(wrong),
@@ -164,13 +164,13 @@ sai_fct_sweep <- function(.f,
 
   unknown <- setdiff(unique(f), c(wrong, known))
   if(length(wrong)) {
-    dict <- sai_lvl_match(wrong, levels = c(unknown, known), "Only match if supremely confident using trusted sources.")
+    dict <- emend_lvl_match(wrong, levels = c(unknown, known), "Only match if supremely confident using trusted sources.")
     dict <- na.omit(dict)
   } else {
     dict <- NULL
     unknown_set <- unknown
     for(x in unknown) {
-      d <- sai_lvl_match(x, levels = c(known, setdiff(unknown_set, x)), "Only match if supremely confident  using trusted sources.")
+      d <- emend_lvl_match(x, levels = c(known, setdiff(unknown_set, x)), "Only match if supremely confident  using trusted sources.")
       if(!is.na(d)) {
         unknown_set <- setdiff(unknown_set, names(d))
         dict <- c(dict, d)
@@ -183,7 +183,7 @@ sai_fct_sweep <- function(.f,
   new_f <- dict_all[f]
   nl <- length(unique(f))
   if(nl <= nlevels_max & nl >= nlevels_min) return(factor(new_f, levels = unique(new_f)))
-  out <- sai_fct_sweep(unname(new_f), known = known_updated, nlevels_max = nlevels_max, nlevels_min = nlevels_min,
+  out <- emend_fct_sweep(unname(new_f), known = known_updated, nlevels_max = nlevels_max, nlevels_min = nlevels_min,
                        nlevels_top = nlevels_top, nlevels_bottom = nlevels_bottom, n_min = n_min)
   setNames(out, .f)
 }
@@ -194,14 +194,14 @@ sai_fct_sweep <- function(.f,
 #' @param levels The levels of the factor.
 #' @param ... Other prompts to the LLM.
 #'
-#' @seealso [sai_lvl_sweep()]
+#' @seealso [emend_lvl_sweep()]
 #' @export
-sai_lvl_match <- function(.f, levels = NULL, ...) {
+emend_lvl_match <- function(.f, levels = NULL, ...) {
   if(is.null(levels)) cli::cli_abort("Please provide the levels of the factor.")
   lvls_unmatched <- setdiff(unique(.f), levels)
   lvls_intersect <- intersect(unique(.f), levels)
   matched <- lapply(lvls_unmatched, function(x) {
-    sai_assist(list(prompt_user("For '{x}' (which may be an acronym) return the best match from {levels*}.
+    emend_assist(list(prompt_user("For '{x}' (which may be an acronym) return the best match from {levels*}.
                            Return 'NA' if no match, not confident or not sure.
                            "),
                     ...),
@@ -210,11 +210,11 @@ sai_lvl_match <- function(.f, levels = NULL, ...) {
   out <- unname(unlist(matched))
   out[!out %in% levels] <- NA
   dict <- setNames(c(out, lvls_intersect), c(lvls_unmatched, lvls_intersect))
-  structure(dict, class = c("sai_lvl_match", class(dict)))
+  structure(dict, class = c("emend_lvl_match", class(dict)))
 }
 
 #' @export
-format.sai_lvl_match <- function(x, ...) {
+format.emend_lvl_match <- function(x, ...) {
   out <- data.frame(original = names(x), converted = unname(unclass(x))) |>
     subset(is.na(converted) | original != converted)
   out <- out[order(out$converted), ]
@@ -223,23 +223,23 @@ format.sai_lvl_match <- function(x, ...) {
 }
 
 #' @export
-print.sai_lvl_match <- function(x, ...) {
+print.emend_lvl_match <- function(x, ...) {
   print(unclass(x))
-  cli::cli_h1("Converted by SAI:")
+  cli::cli_h1("Converted by emend:")
   out <- format(x)
   print(out, ...)
 }
 
-#' @rdname sai_lvl_match
+#' @rdname emend_lvl_match
 #' @export
-sai_fct_match <- function(.f, levels = NULL, ...) {
-  dict <- sai_lvl_match(.f, levels, ...)
+emend_fct_match <- function(.f, levels = NULL, ...) {
+  dict <- emend_lvl_match(.f, levels, ...)
   factor(unname(unclass(dict)[.f]), levels = levels)
 }
 
-#' @rdname sai_fct_sweep
+#' @rdname emend_fct_sweep
 #' @export
-sai_lvl_sweep <- function(.f,
+emend_lvl_sweep <- function(.f,
                           known = NULL,
                           wrong = NULL,
                           nlevels_max = length(unique(.f)) - length(wrong),
@@ -248,7 +248,7 @@ sai_lvl_sweep <- function(.f,
                           nlevels_bottom = 0,
                           n_min = 1L,
                           ...) {
-  dict <- sai_fct_sweep(.f,
+  dict <- emend_fct_sweep(.f,
                         known = known,
                         wrong = wrong,
                         nlevels_max = nlevels_max,
@@ -259,5 +259,5 @@ sai_lvl_sweep <- function(.f,
                         ...)
 
   res <- setNames(as.character(dict), .f)
-  structure(res[!duplicated(paste0(res, names(res)))], class = c("sai_lvl_match", class(res)))
+  structure(res[!duplicated(paste0(res, names(res)))], class = c("emend_lvl_match", class(res)))
 }
