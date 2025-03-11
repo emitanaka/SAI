@@ -108,4 +108,3 @@ prompt_assistant <- function(content, images = NULL, tool_calls = NULL,  .conten
 prompt_system <- function(content, images = NULL, tool_calls = NULL,  .content_envir = rlang::caller_env(), .collapse_regex = "[*]$") {
   prompt(content, role = "system", images = images, tool_calls = tool_calls, .content_envir = .content_envir, .collapse_regex = .collapse_regex)
 }
-

@@ -1,4 +1,3 @@
-
 #' Translate text from one language to another
 #'
 #' @param text The text to translate.
