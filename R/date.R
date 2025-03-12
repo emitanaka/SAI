@@ -4,25 +4,33 @@
 #'
 #' @param dates_vector A character vector that is assumed to be dates.
 #' @param input_format A character value to specify input date format.
-#' @param ... Extra options for the large language model.
+#' @param chat A chat object defined by ellmer.
 #'
 #' @examples
+#' x <- c("16/02/1997", "20 November 2024", "24 Mar 2022", "2000-01-01", "Jason", "Dec 25, 2030", "12/05/2024")
+#' sai_clean_date(x)
+#' # To specify the input date format:
 #' x <- c("12/05/2024", "11/15/2024", "02/25/2024")
 #' emend_clean_date(x, input_format = "MM/DD/YYYY")
-#' # `copy = TRUE` copies the output into clipboard in a format that can be entered easily in the user's script
-#'
-#'
 #'
 #' @export
-emend_clean_date <- function(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...) {
-  out <- emend_assist(
-    c(list("The input data is a vector of dates, the input dates are in format of {input_format*}.
-            InputData = {dates_vector*}.
-            Input data are in different date format.
-            You need to convert the input date into YYYY-MM-DD.
-            Only return the output dates in a vector format.
-            If the input is not date, return NA.")),
-    format = "json", ...)
-  if(copy) clipr::write_clip(paste0(deparse(out), collapse = ""))
-  as.Date(out[[1]])
+emend_clean_date <- function(dates_vector, input_format = "DD-MM-YYYY", chat = NULL) {
+
+  if (!is.character(dates_vector)) {rlang::abort("Input must be a character vector.")}
+  if (is.null(chat)) {rlang::abort("Please provide the chat environment.")}
+
+  chat$clone()
+  chat$set_turns(list())
+
+  converted <- lapply(dates_vector, function(x){
+    response <- chat$chat(paste0(
+      "For '", x, "' convert it from ", input_format, "to 'YYYY-MM-DD'. ",
+      "Return converted date only, no explanation or comment."
+    ))
+
+    return(response)
+  })
+
+  new_dates <- as.Date(unlist(converted), format = "%Y-%m-%d")
+  return(new_dates)
 }

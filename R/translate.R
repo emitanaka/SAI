@@ -1,61 +1,67 @@
-#' Translate text from one language to another
+#' Translate text from one language to another.
 #'
 #' @param text The text to translate.
 #' @param from The language to translate from. The default is NULL (not specified).
-#' @param to The language to translate to. The default is "English". The default
-#' can be modified using `emend_set_language()`.
-#'
-#'
-#' @family translate
+#' @param to The language to translate to. The default is "English".
 #'
 #' @examples
-#' # example code
 #' emend_translate(c("猿も木から落ちる", "你好", "bon appetit"))
 #'
 #' @export
-emend_translate <- function(text, from = NULL, to = emend_get_option("language")) {
-  abort_if_not_text(text)
+emend_translate <- function(text, from = NULL, to = "English", chat = NULL) {
 
-  map_chr(text, function(x) {
-    emend_assist(list(prompt_user(x),
-                    if(is.null(from)) prompt_user("Translate the above text to {to}. Just return the translated text.")
-                    else prompt_user("Translate the above text from {from} to {to}. Just return the translated text.")))
+  if (!is.character(text)) {
+    rlang::abort("Input must be a character vector.")
+  }
+
+  if (is.null(chat)) {
+    rlang::abort("Please provide the chat environment.")
+  }
+
+  chat$clone()
+  chat$set_turns(list())
+
+  translated <- lapply(text, function(x){
+    response <- chat$chat(paste0(
+      "For '", x, "' translate it to ", to, ". ",
+      "Return translated text only, no explanation or comment."
+    ))
+    return(response)
   })
+
+  translated_text <- unlist(translated)
+  return(translated_text)
 }
 
-
-#' Determine if the input is a particular language
+#' Identify the language in the text.
+#' @param text A string or a factor that contains text information.
+#' @param chat A chat object defined by ellmer
 #'
-#' @param text The text.
-#' @param language The language to check. The default is "English".
 #' @examples
-#' emend_is_language(c("猿も木から落ちる", "你好", "bon appetit"),
-#'                 language = "Japanese")
-#' @family translate
-
-#' @export
-emend_is_language <- function(text, language = emend_get_option("language")) {
-  abort_if_not_text(text)
-  # TODO: check what language and see if this is matched with above
-
-  map_lgl(text, function(x) {
-    emend_yes_no(list(prompt_user(x),
-                    prompt_user("Is the above text in {language}?")))
-  })
-}
-
-#' Determine the language of the input text
+#' emend_what_language(c("猿も木から落ちる", "你好", "bon appetit")
 #'
-#' @param text The text.
-#' @family translate
-#' @examples
-#' emend_what_language(c("猿も木から落ちる", "你好", "bon appetit"))
 #' @export
-emend_what_language <- function(text) {
-  abort_if_not_text(text)
-  map_chr(text, function(x) {
-    emend_assist(list(prompt_user(x),
-                    prompt_user("What language is the above text in?")),
-               format = "json")[[1]]
+emend_what_language <- function(text, chat = NULL) {
+
+  if (!is.character(text)) {
+    rlang::abort("Input must be a character vector.")
+  }
+
+  if (is.null(chat)) {
+    rlang::abort("Please provide the chat environment.")
+  }
+
+  chat$clone()
+  chat$set_turns(list())
+
+  language_types <- lapply(text, function(x){
+    response <- chat$chat(paste0(
+      "For '", x, "' identify which language it is. ",
+      "Return language type only, no explanation or comment."
+    ))
+    return(response)
   })
+
+  types <- unlist(language_types)
+  return(types)
 }

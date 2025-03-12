@@ -166,7 +166,7 @@ emend_clean_date(x)
 By default, the function interprets dates in the format "XX/XX/YYYY" as the European style "DD/MM/YYYY". If the dates are in the US style "MM/DD/YYYY", you can specify the input date format using the `input_format` option. 
 
 ```{r}
-x <- c("12/05/2024", "Nov 15, 2024", "02/25/2024")
+x <- c("12/25/2024", "Nov 15, 2024", "02/25/2024")
 emend_clean_date(x, input_format = "MM/DD/YYYY")
 ```
 
