@@ -84,45 +84,13 @@ emend_fct_reorder <- function(.f, chat = NULL, ...) {
   if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
   if(is.null(chat)) cli::cli_abort("Please provide the chat object.")
 
-  lvls <- emend_lvl_order(.f, chat = chat, ...)
+  lvls <- reorder(unique(.f), chat = chat, ...)
   factor(.f, levels = lvls)
-}
-
-#' Reorder levels of an ordinal factor
-#'
-#' This function reorders the levels of a factor based on the sentiment scores of the levels.
-#' Using this function can be expensive (depending on the LLM used and user's computer spec)
-#' so users may wish to use this interactively only and copy the output into their script.
-#'
-#' @param .f A character vector that is assumed to be an ordinal factor.
-#' @param chat A chat object defined by ellmer.
-#' @param copy A logical value to indicate whether the output should be copied into the
-#'  user's clipboard.
-#' @param ... Extra prompts to the LLM.
-#'
-#' @examples
-#' # to get the new level order
-#' # users should check if the new order
-#' chat <- chat_ollama(model = "llama3.1:8b", seed = 0, echo = "none")
-#' emend_lvl_order(likerts$likert1, chat = chat)
-#' # `copy = TRUE` copies the output into clipboard in a format that can be
-#' # entered easiliy in the user's script
-#' emend_lvl_order(likerts$likert1, chat = chat, copy = TRUE)
-#'
-#' @export
-emend_lvl_order <- function(.f, chat = NULL, copy = FALSE, ...) {
-  if(is.null(.f)) cli::cli_abort("Please provide the input vector or factor.")
-  if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
-  if(is.null(chat)) cli::cli_abort("Please provide the chat object.")
-
-  lvls <- unique(.f)
-  res <- reorder(lvls, chat = chat)
-  if(copy) clipr::write_clip(paste0(deparse(res), collapse = ""))
-  res
 }
 
 # reorder_3 replace function
 reorder <- function(lvls, chat = NULL, ...) {
+
   chat$set_system_prompt(
     paste0(
       "You are a sentiment analysis model. Your task is to analyze the sentiment of the input sentence and provide a sentiment score. ",
@@ -133,7 +101,6 @@ reorder <- function(lvls, chat = NULL, ...) {
     )
   )
 
-  chat$clone()
   chat$set_turns(list())
 
   senti_scores <- lapply(lvls, function(x) {
@@ -148,7 +115,6 @@ reorder <- function(lvls, chat = NULL, ...) {
   df_ordered <- df[order(df$Score), ]
   return(df_ordered$Level)
 }
-
 
 #' Clean up the levels for the input factor.
 #'

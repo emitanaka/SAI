@@ -7,11 +7,9 @@
 emend_fct_reorder(.f, chat = NULL, ...)
 }
 \arguments{
-\item{.f}{A factor.}
+\item{.f}{A vector of characters or a factor.}
 
-\item{chat}{A chat object defined by ellmer}
-
-\item{...}{Other prompts to the LLM.}
+\item{chat}{A chat object defined by ellmer.}
 }
 \description{
 Reorder the levels of the input factor in a meaningful way.
