@@ -2,18 +2,19 @@
 % Please edit documentation in R/factor.R
 \name{emend_lvl_order}
 \alias{emend_lvl_order}
-\alias{emend_fct_reorder}
 \title{Reorder levels of an ordinal factor}
 \usage{
-emend_lvl_order(.f, copy = FALSE, ...)
-
-emend_fct_reorder(.f)
+emend_lvl_order(.f, chat = NULL, copy = FALSE, ...)
 }
 \arguments{
 \item{.f}{A character vector that is assumed to be an ordinal factor.}
 
+\item{chat}{A chat object defined by ellmer.}
+
 \item{copy}{A logical value to indicate whether the output should be copied into the
 user's clipboard.}
+
+\item{...}{Extra prompts to the LLM.}
 }
 \description{
 This function reorders the levels of a factor based on the sentiment scores of the levels.
@@ -23,11 +24,10 @@ so users may wish to use this interactively only and copy the output into their 
 \examples{
 # to get the new level order
 # users should check if the new order
-emend_lvl_order(likerts$likert1)
+chat <- chat_ollama(model = "llama3.1:8b", seed = 0, echo = "none")
+emend_lvl_order(likerts$likert1, chat = chat)
 # `copy = TRUE` copies the output into clipboard in a format that can be
 # entered easiliy in the user's script
-emend_lvl_order(likerts$likert1, copy = TRUE)
-# to apply the new levels directly to the input
-emend_fct_reorder(likerts$likert1)
+emend_lvl_order(likerts$likert1, chat = chat, copy = TRUE)
 
 }

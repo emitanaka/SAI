@@ -2,22 +2,19 @@
 % Please edit documentation in R/translate.R
 \name{emend_what_language}
 \alias{emend_what_language}
-\title{Determine the language of the input text}
+\title{Identify the language in the text.}
 \usage{
-emend_what_language(text)
+emend_what_language(text, chat = NULL)
 }
 \arguments{
-\item{text}{The text.}
+\item{text}{A string or a factor that contains text information.}
+
+\item{chat}{A chat object defined by ellmer}
 }
 \description{
-Determine the language of the input text
+Identify the language in the text.
 }
 \examples{
-emend_what_language(c("猿も木から落ちる", "你好", "bon appetit"))
+emend_what_language(c("猿も木から落ちる", "你好", "bon appetit")
+
 }
-\seealso{
-Other translate: 
-\code{\link{emend_is_language}()},
-\code{\link{emend_translate}()}
-}
-\concept{translate}

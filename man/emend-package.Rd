@@ -4,21 +4,26 @@
 \name{emend-package}
 \alias{emend}
 \alias{emend-package}
-\title{emend: Standarise text data with an AI assistant}
+\title{emend: Cleaning text data with an AI assistant}
 \description{
-The package provides a simple interface to use the large language models to clean data.
+The package provides a simple interface to use the large language models to clean text data.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/emitanaka/SAI}
-  \item \url{http://emitanaka.org/SAI/}
-  \item Report bugs at \url{https://github.com/emitanaka/SAI/issues}
+  \item \url{https://github.com/emitanaka/emend}
+  \item \url{http://emitanaka.org/emend/}
+  \item Report bugs at \url{https://github.com/emitanaka/emend/issues}
 }
 
 }
 \author{
 \strong{Maintainer}: Emi Tanaka \email{dr.emi.tanaka@gmail.com} (\href{https://orcid.org/0000-0002-1455-259X}{ORCID}) [copyright holder]
+
+Authors:
+\itemize{
+  \item Jiajia Li \email{lijia970324@gmail.com} (\href{https://orcid.org/0009-0003-7143-9336}{ORCID})
+}
 
 }
 \keyword{internal}

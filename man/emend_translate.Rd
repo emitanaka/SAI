@@ -2,29 +2,21 @@
 % Please edit documentation in R/translate.R
 \name{emend_translate}
 \alias{emend_translate}
-\title{Translate text from one language to another}
+\title{Translate text from one language to another.}
 \usage{
-emend_translate(text, from = NULL, to = emend_get_option("language"))
+emend_translate(text, from = NULL, to = "English", chat = NULL)
 }
 \arguments{
 \item{text}{The text to translate.}
 
 \item{from}{The language to translate from. The default is NULL (not specified).}
 
-\item{to}{The language to translate to. The default is "English". The default
-can be modified using \code{emend_set_language()}.}
+\item{to}{The language to translate to. The default is "English".}
 }
 \description{
-Translate text from one language to another
+Translate text from one language to another.
 }
 \examples{
-# example code
 emend_translate(c("猿も木から落ちる", "你好", "bon appetit"))
 
 }
-\seealso{
-Other translate: 
-\code{\link{emend_is_language}()},
-\code{\link{emend_what_language}()}
-}
-\concept{translate}

@@ -2,22 +2,26 @@
 % Please edit documentation in R/factor.R
 \name{emend_lvl_match}
 \alias{emend_lvl_match}
-\alias{emend_fct_match}
-\title{Match the input factor to supplied levels}
+\title{Match the input factor to supplied levels.}
 \usage{
-emend_lvl_match(.f, levels = NULL, ...)
-
-emend_fct_match(.f, levels = NULL, ...)
+emend_lvl_match(.f, levels = NULL, chat = NULL, ...)
 }
 \arguments{
 \item{.f}{A factor.}
 
 \item{levels}{The levels of the factor.}
 
+\item{chat}{The chat object defined by ellmer.}
+
 \item{...}{Other prompts to the LLM.}
 }
 \description{
-Match the input factor to supplied levels
+Match the input factor to supplied levels.
+}
+\examples{
+chat <- chat_ollama(model = "llama3.1:8b", seed = 0, echo = "none")
+emend_lvl_match(messy$country, levels = c("Asia", "Europe", "North America", "Oceania", "South America"), chat = chat)
+
 }
 \seealso{
 \code{\link[=emend_lvl_sweep]{emend_lvl_sweep()}}

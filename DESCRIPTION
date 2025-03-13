@@ -2,8 +2,8 @@ Package: emend
 Title: Cleaning text data with an AI assistant
 Version: 0.0.0.9000
 Authors@R: 
-    c(person("Emi", "Tanaka", , "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-1455-259X")),
-      person("Jiajia", "Li", , "lijia970324@gmail.com", role = "aut"), comment = c(ORCID = "0009-0003-7143-9336"))
+    c(person(given = "Emi", family = "Tanaka", email = "dr.emi.tanaka@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-1455-259X")),
+      person(given = "Jiajia", family = "Li", email = "lijia970324@gmail.com", role = c("aut"), comment = c(ORCID = "0009-0003-7143-9336")))
 Description: The package provides a simple interface to use the large language models to clean text data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -16,7 +16,8 @@ Imports:
     glue,
     httr2,
     jsonlite,
-    stringr
+    stringr,
+    dplyr
 Depends: 
     R (>= 2.10)
 LazyData: true

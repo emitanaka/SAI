@@ -71,9 +71,8 @@ emend_fct_match <- function(.f, levels = NULL, chat = NULL, ...) {
 }
 
 #' Reorder the levels of the input factor in a meaningful way.
-#' @param .f A factor.
-#' @param chat A chat object defined by ellmer
-#' @param ... Other prompts to the LLM.
+#' @param .f A vector of characters or a factor.
+#' @param chat A chat object defined by ellmer.
 #'
 #' @examples
 #' chat <- chat_ollama(model = "llama3.1:8b", seed = 0, echo = "none")
@@ -81,8 +80,11 @@ emend_fct_match <- function(.f, levels = NULL, chat = NULL, ...) {
 #'
 #' @export
 emend_fct_reorder <- function(.f, chat = NULL, ...) {
+  if(is.null(.f)) cli::cli_abort("Please provide the input vector or factor.")
+  if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
   if(is.null(chat)) cli::cli_abort("Please provide the chat object.")
-  lvls <- emend_lvl_order(.f, chat, ...)
+
+  lvls <- emend_lvl_order(.f, chat = chat, ...)
   factor(.f, levels = lvls)
 }
 
@@ -109,62 +111,44 @@ emend_fct_reorder <- function(.f, chat = NULL, ...) {
 #'
 #' @export
 emend_lvl_order <- function(.f, chat = NULL, copy = FALSE, ...) {
+  if(is.null(.f)) cli::cli_abort("Please provide the input vector or factor.")
+  if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
+  if(is.null(chat)) cli::cli_abort("Please provide the chat object.")
+
   lvls <- unique(.f)
-  res <- reorder_3(lvls, chat, ...)
+  res <- reorder(lvls, chat = chat)
   if(copy) clipr::write_clip(paste0(deparse(res), collapse = ""))
   res
 }
 
-# works for all
-reorder_3 <- function(lvls, chat = NULL, ...) {
+# reorder_3 replace function
+reorder <- function(lvls, chat = NULL, ...) {
+  chat$set_system_prompt(
+    paste0(
+      "You are a sentiment analysis model. Your task is to analyze the sentiment of the input sentence and provide a sentiment score. ",
+      "The score should be a numerical value between -100 and 100, where: ",
+      "* 100 indicates a very positive sentiment * 0 indicates a neutral sentiment * -100 indicates a very negative sentiment ",
+      "Consider the overall tone of the sentence, including emotions, positivity, or negativity in the context. ",
+      "Return score only."
+    )
+  )
 
   chat$clone()
   chat$set_turns(list())
 
-  out <- chat$chat(paste0(
-    "Rank the sentiment scores for each level of the input: ",
-    paste(lvls, collapse = ", "), ". ",
-    "Positive connotations like satisfied or likely should have positive scores.
-                    Negative connotations like unsatisfied or unlikely should have negative scores.
-                    Satisfied should have a higher score than somewhat satisfied.
-                    Agree should have a higher score than somewhat agree.
-                    Neutral elements should have a score of 0.
-                    Just give the scores. Return result only in JSON object.
-                    Return a valid JSON object without any backticks around it.
-                    No commentary. "))
-  out_json <- jsonlite::fromJSON(out)
-  vec <- unlist(out_json)
-  # break ties
-  if(any(duplicated(vec))) {
-    dups <- vec[duplicated(vec)]
-    out2 <- chat$chat(paste0(
-      "Rank the sentiment scores for each level of the input: ",
-      paste(lvls[vec %in% dups], collapse = ", "), ". ",
-      "Positive connotations like satisfied or likely should have positive scores.
-                    Negative connotations like unsatisfied or unlikely should have negative scores.
-                    Satisfied should have a higher score than somewhat satisfied.
-                    Agree should have a higher score than somewhat agree.
-                    Neutral elements should have a score of 0.
-                    Just give the scores. Return result only in JSON object.
-                    Return a valid JSON object without any backticks around it.
-                    No commentary.  ",
-      ...
+  senti_scores <- lapply(lvls, function(x) {
+    chat$chat(paste0(
+      "Now process: ", x
     ))
-    out2_json <- jsonlite::fromJSON(out2)
-    vec2 <- unlist(out2_json)
-    vec2 <- vec2 / sum(vec2)
-    vec[vec %in% dups] <- vec[vec %in% dups] + vec2
-  }
-  res <- names(sort(vec))
-  if(length(vec) != length(lvls)) {
-    cli::cli_warn("Could not reorder the levels meaningfully.")
-    return(lvls)
-  }
-  if(!all(res %in% lvls)) {
-    res <- names(sort(setNames(vec, lvls)))
-  }
-  res
+  })
+
+  scores <- as.numeric(unlist(senti_scores))
+
+  df <- data.frame(Level = lvls, Score = scores)
+  df_ordered <- df[order(df$Score), ]
+  return(df_ordered$Level)
 }
+
 
 #' Clean up the levels for the input factor.
 #'

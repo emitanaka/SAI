@@ -31,26 +31,20 @@ The default setting has been set so that the results are reproducible and less p
 
 You will also need to set up a large language model (LLM), either by downloading a local LLM via Ollama or API access. To do this see [`vignette("setup-LLM", package = "emend")`](https://emitanaka.org/emend/articles/setup-LLM.html).
 
-
 ### Package
 
 You can install the development version of emend like below:
 
-``` r
+```{r}
 # install.packages("pak")
 pak::pak("emitanaka/emend")
 ```
 
-
-
 ## Examples
-
 
 ```{r}
 library(emend)
 ```
-
-
 
 ### Specifying the LLM
 
@@ -72,7 +66,6 @@ Tiny models (1b) are faster but less accurate. It is not recommended to use them
 ### Categorise text
 
 Some categorical variables can have simple typos or alternative representations. For example below we have "UK" written also as "United Kingdom". 
-
 
 ```{r}
 messy$country
@@ -138,19 +131,6 @@ You can also try to identify the language in the text.
 
 ```{r}
 emend_what_language(text)
-```
-
-## Images
-
-We may have some plots (or image) and process these using a multimodal model like `llava`. This image is available as a link [here](https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png).
-
-![](https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png){width="40%"}
-
-We can describe the plot with `emend_describe_image()` function. The image either has to be a url or path where the image is stored. This can be handy to create alt text entries quickly, but note that the description can have errors (as below).
-
-```{r, eval=FALSE}
-emend_describe_image("https://upload.wikimedia.org/wikipedia/commons/3/35/Ggplot2_Violin_Plot.png",
-                   model = model_ollama("llava:13b"))
 ```
 
 ## Dates

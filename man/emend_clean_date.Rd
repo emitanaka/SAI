@@ -4,23 +4,23 @@
 \alias{emend_clean_date}
 \title{Standardise date format}
 \usage{
-emend_clean_date(dates_vector, input_format = "DD/MM/YYYY", copy = FALSE, ...)
+emend_clean_date(dates_vector, input_format = "DD-MM-YYYY", chat = NULL)
 }
 \arguments{
 \item{dates_vector}{A character vector that is assumed to be dates.}
 
 \item{input_format}{A character value to specify input date format.}
 
-\item{...}{Extra options for the large language model.}
+\item{chat}{A chat object defined by ellmer.}
 }
 \description{
 This function standardise inconsistent date formats.
 }
 \examples{
+x <- c("16/02/1997", "20 November 2024", "24 Mar 2022", "2000-01-01", "Jason", "Dec 25, 2030", "12/05/2024")
+sai_clean_date(x)
+# To specify the input date format:
 x <- c("12/05/2024", "11/15/2024", "02/25/2024")
 emend_clean_date(x, input_format = "MM/DD/YYYY")
-# `copy = TRUE` copies the output into clipboard in a format that can be entered easily in the user's script
-
-
 
 }
