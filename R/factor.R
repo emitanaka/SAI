@@ -1,9 +1,8 @@
 #' Match the input factor to supplied levels.
 #'
-#' @param .f A factor.
+#' @param .f A vector of characters or a factor.
 #' @param levels The levels of the factor.
 #' @param chat The chat object defined by ellmer.
-#' @param ... Other prompts to the LLM.
 #'
 #' @seealso [emend_lvl_sweep()]
 #' @examples
@@ -18,23 +17,28 @@ emend_lvl_match <- function(.f, levels = NULL, chat = NULL, ...) {
   lvls_unmatched <- setdiff(unique(.f), levels)
   lvls_intersect <- intersect(unique(.f), levels)
 
-  chat$clone()
+  chat$set_system_prompt(paste0(
+    "You are a data cleaning assistant specializing in correcting categorical data. The correct categorical levels are: ",
+    paste(levels, collapse = ", "), ". ",
+    "Your task is to: ",
+    "* Analyze the given category value and determine if it is a typo, abbreviation, or incorrect variant of one of the correct levels. ",
+    "* Suggest the best-matching correct levels based on spelling similarity, common abbreviations, or logical meaning. ",
+    "* Ensure that the corrected value belongs to the predefined correct levels. ",
+    "Respond with only the corrected category name without additional explanations."
+  ))
+
   chat$set_turns(list())
 
-  matched <- lapply(lvls_unmatched, function(x){
+  matched <- lapply(lvls_unmatched, function(x) {
     chat$chat(paste0(
-      "For '", x, "' (which may be an acronym) return the best match from: ",
-      paste(levels, collapse = ", "), ". ",
-      "Return 'Unidentified' if no match, not confident or not sure.
-      Return result only. No code writing or commentary. ",
-      ...
+      "Now process: ", x
     ))
   })
 
   out <- unlist(matched)
   out[!out %in% levels] <- "Unidentified"
   dict <- setNames(c(out, lvls_intersect), c(lvls_unmatched, lvls_intersect))
-  structure(dict, class = c("emend_lvlmatch", class(dict)))
+  structure(dict, class = c("emend_lvl_match", class(dict)))
 }
 
 #' @export
@@ -84,12 +88,12 @@ emend_fct_reorder <- function(.f, chat = NULL, ...) {
   if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
   if(is.null(chat)) cli::cli_abort("Please provide the chat object.")
 
-  lvls <- reorder(unique(.f), chat = chat, ...)
+  lvls <- reorder_by_llm(unique(.f), chat = chat, ...)
   factor(.f, levels = lvls)
 }
 
 # reorder_3 replace function
-reorder <- function(lvls, chat = NULL, ...) {
+reorder_by_llm <- function(lvls, chat = NULL, ...) {
 
   chat$set_system_prompt(
     paste0(
