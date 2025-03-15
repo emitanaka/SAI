@@ -132,9 +132,10 @@ reorder_by_llm <- function(lvls, chat = NULL, ...) {
 #'
 #' @export
 emend_lvl_sweep <- function(.f, chat = NULL, ...){
+  if(is.null(.f)) cli::cli_abort("Please provide the input vector or factor.")
+  if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
   if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
 
-  chat$clone()
   chat$set_turns(list())
 
   levels_0 <- unique(.f)
@@ -173,4 +174,62 @@ print.emend_lvl_sweep <- function(x, ...) {
   cli::cli_h1("Converted by emend:")
   out <- format(x)
   print(out, ...)
+}
+
+#' Get the unique levels of messy categorical data
+#' The returned value is a vector.
+#' The LLM will return full names instead of abbreviations.
+#' You can use this functions to clean up your categorical data and obtain unique levels.
+#' Double check if the output from LLM is true to your data.
+#' This function is generally suitable for categories, not working well with sentences and too many categories.
+#'
+#' @param .f A vector of characters or a factor.
+#' @param chat A chat object defined by ellmer.
+#'
+#' @examples
+#' chat <- ellmer::chat_ollama(model = "llama3.1:8b", seed = 0, echo = "none")
+#' emend_get_levels(messy$country, chat = chat)
+#'
+#' @export
+emend_get_levels <- function(.f, chat = NULL, ...){
+  if(is.null(.f)) cli::cli_abort("Please provide the input vector or factor.")
+  if(!is.character(.f) && !is.factor(.f)) cli::cli_abort("Input must be a charactor vector or a factor.")
+  if(is.null(chat)) cli::cli_abort("Please provide the chat environment.")
+
+  chat$set_system_prompt(paste0(
+    "You are a data cleaning assistant specializing in standardizing categorical data. ",
+    "You will be given a list of messy names that may contain typos, abbreviations, or inconsistencies. ",
+    "Your task is to: ",
+    "* Analyze the given list and determine the most likely set of correct unique categories. ",
+    "* Group similar values together and infer the correct standardised categories. ",
+    "* Ensure that the correct categories are in their __full names__, expanding any abbreviations where necessary. ",
+    "* Return only the cleaned unique categories as a JSON array. ",
+    "## Output Format: ",
+    "Return the result as a JSON array with no additional text or explanations. Example format: ",
+    '["Full Category Name 1", "Full Category Name 2", "Full Category Name 3"]',
+    "Ensure that: ",
+    "* The output contains __only__ a valid JSON array. ",
+    "* Abbreviations are expanded into full names. ",
+    "* The categories are standardized and free of inconsistencies."
+  ))
+
+  chat$set_turns(list())
+
+  origin_levels <- unique(.f)
+
+  llm_out <- chat$chat(paste0(
+    "Now process: ",
+    paste(origin_levels, collapse = ", "), "."
+  ))
+
+  tryCatch({
+    correct_categories <- jsonlite::fromJSON(llm_out)
+    if (!is.vector(correct_categories) || !is.character(correct_categories)) {
+      cli::cli_abort("LLM output is not a valid JSON array of strings.")
+    }
+  }, error = function(e) {
+    cli::cli_abort("Failed to parse LLM response as JSON. Please check the model output.")
+  })
+
+  return(correct_categories)
 }
